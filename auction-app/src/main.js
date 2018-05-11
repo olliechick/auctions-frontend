@@ -5,6 +5,11 @@ import Auctions from './Auctions.vue';
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
+import VueResource from 'vue-resource';
+Vue.use(VueResource);
+
+Vue.http.options.emulateJSON = true;
+
 const routes = [
   {
     path: "/",
