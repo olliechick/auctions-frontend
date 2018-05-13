@@ -74,54 +74,10 @@
 
     <!--  ================= endof THIS GOES AT THE TOP OF EACH PAGE ================= -->
 
-    <!-- Search and category selector -->
-
-    <table class="taskbar">
-      <tr>
-
-        <td>
-          <form @submit.prevent="handleSubmit" id="searchform">
-
-            <label>
-              <input type="text" class="searchbox" v-model="searchTerm" placeholder="Search"/>
-            </label>
-            {{ searchTerm }}
-
-            <button type="submit" class="searchbutton">
-              <!-- magnifying glass -->
-              <div style="transform: rotate(-45deg);">&#9906;</div>
-            </button>
-
-          </form>
-        </td>
-
-        <td>
-          <select v-model="selectedCategory" @change="changeCategory()">
-            <option disabled value="">Categories</option>
-            <option v-for="category in categories" v-bind:value="category.categoryId">{{ category.categoryTitle }}</option>
-          </select>
-        </td>
-
-      </tr>
-    </table>
-
-    <!-- Auction list -->
-
-    <div id="auctions">
-      <table class="auctionlist">
-        <tr v-for="(auction, i) in auctions" class="auctionlist">
-          <td>
-            <img :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'" width="200">
-          </td>
-          <td>{{ auction.title }}</td>
-          <td>{{ i }}</td>
-        </tr>
-      </table>
-    </div>
-
+    a list of auctions
   </div>
-</template>
 
+</template>
 
 <script>
   export default {
@@ -129,49 +85,16 @@
       return {
         error: "",
         errorFlag: false,
-        user: null,
-        auctions: [],
-        searchTerm: "",
-        selectedCategory: null,
-        categories: []
+        user: null
       }
     },
     mounted: function () {
       // Get the logged in user
       this.getUser();
-      // Get all the auctions and categories
-      this.getAuctions();
-      this.getCategories();
       // Make dropdowns close when the user clicks off them
       this.closeDropdownsOnClickOff();
     },
     methods: {
-
-      getAuctions: function () {
-        console.log("getting auctions");
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions')
-          .then(function (response) {
-            this.auctions = response.data;
-            console.log(response.data);
-          }, function (error) {
-            console.log(error);
-          });
-      },
-
-      getCategories: function () {
-        console.log("getting cats");
-        this.$http.get('http://127.0.0.1:4941/api/v1/categories')
-          .then(function (response) {
-            this.categories = response.data;
-            console.log(response.data);
-            console.log(this.categories);
-            console.log("above2");
-          }, function (error) {
-            console.log(error);
-          });
-        console.log(this.categories);
-        console.log("above");
-      },
 
       toggleBuyingDropdown: function () {
         document.getElementById("buyingDropdown").classList.toggle("show");
@@ -221,38 +144,11 @@
 
       getUser: function () {
         return "";
-        //todo actually code this
-      },
-
-      openRegisterPage: function () {
-        alert("Register not yet implemented.");
-      },
-
-      logout: function () {
-        alert("Logout not yet implemented.");
       },
 
       goToAnotherPage: function (page) {
         console.log("going home");
         this.$router.push(page);
-      },
-      handleSubmit() {
-        // Send data to the server or update your stores and such.
-      },
-
-      changeCategory: function () {
-        console.log("Changed cat");
-        console.log(this.selectedCategory);
-        this.auctions = [{title:"Loading"}];
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions?category-id=' + this.selectedCategory)
-          .then(function (response) {
-            console.log(response);
-            this.auctions = response.data;
-            console.log(response.data);
-          }, function (error) {
-            console.log(error);
-          });
-
       }
     }
   }

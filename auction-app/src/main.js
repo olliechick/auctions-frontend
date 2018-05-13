@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue';
 import Auctions from './Auctions.vue';
+import Won from './Won.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -14,6 +15,11 @@ const routes = [
   {
     path: "/",
     component: Auctions
+  },
+  {
+    path: "/won",
+    name: "won",
+    component: Won
   }
 ];
 
