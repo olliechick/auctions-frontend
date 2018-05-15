@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue';
 import Auctions from './Auctions.vue';
 import Won from './Won.vue';
+import Register from './Register.vue';
+import Navbar from './Navbar.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -20,6 +22,11 @@ const routes = [
     path: "/won",
     name: "won",
     component: Won
+  },
+  {
+    path: "/register",
+    name: "register",
+    component: Register
   }
 ];
 

@@ -66,7 +66,7 @@ table.taskbar {
 .searchbutton {
   cursor: pointer;
   margin-right: 10px;
-
+  font-size:18px;
 }
 
 /* ================= Dropdown menus ================= */
@@ -121,6 +121,7 @@ tr.auctionlist:hover {
   background-color: #f5f5f5;
 }
 
-/*  ================= Text input boxes ================= */
+/*  ================= Text input / dropdown select boxes ================= */
 .searchbox {
+  font-size:20px;
 }

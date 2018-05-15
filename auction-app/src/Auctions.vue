@@ -1,78 +1,9 @@
 <template>
   <div>
 
-    <!--  ================= THIS GOES AT THE TOP OF EACH PAGE ================= -->
+    <h1 class="title"> Home </h1>
 
-    <div v-if="errorFlag" style="color: red;">
-      {{ error }}
-    </div>
-
-    <h1 class="title">
-      Home
-    </h1>
-
-    <table class="taskbar">
-      <tr>
-
-        <td>
-          <button type="button" class="btn tabbtn" v-on:click="goToAnotherPage('/')">
-            Home
-          </button>
-        </td>
-
-        <!-- User not logged in -->
-        <div v-if="user != null">
-          <td>
-            <button type="button" class="btn actionbtn" data-toggle="modal" data-target="#loginModal">
-              Log in
-            </button>
-          </td>
-          <td>
-            <button type="button" class="btn actionbtn" v-on:click="openRegisterPage()">
-              Register
-            </button>
-          </td>
-        </div>
-
-        <!-- User logged in -->
-        <div v-else>
-          <td>
-            <div class="dropdown">
-              <button v-on:click="toggleBuyingDropdown()" id="buyingdropbtn" class="btn dropbtn">
-                Buying ▼
-              </button>
-              <div id="buyingDropdown" class="dropdown-content">
-                <a v-on:click="goToAnotherPage('/won')">Won</a>
-                <a v-on:click="goToAnotherPage('/bidding_on')">Bidding on</a>
-              </div>
-            </div>
-          </td>
-
-          <td>
-            <div class="dropdown">
-              <button v-on:click="toggleSellingDropdown()" id="sellingdropbtn" class="btn dropbtn">
-                Selling ▼
-              </button>
-              <div id="sellingDropdown" class="dropdown-content">
-                <a v-on:click="goToAnotherPage('/create')">Create auction</a>
-                <a v-on:click="goToAnotherPage('/current')">Items I'm selling</a>
-                <a v-on:click="goToAnotherPage('/sold')">Sold</a>
-                <a v-on:click="goToAnotherPage('/unsold')">Unsold</a>
-              </div>
-            </div>
-          </td>
-          <td>
-            <button type="button" class="btn actionbtn" v-on:click="logout()">
-              Log out
-            </button>
-          </td>
-        </div>
-
-      </tr>
-    </table>
-
-
-    <!--  ================= endof THIS GOES AT THE TOP OF EACH PAGE ================= -->
+    <navbar></navbar>
 
     <!-- Search and category selector -->
 
@@ -80,12 +11,11 @@
       <tr>
 
         <td>
-          <form @submit.prevent="handleSubmit" id="searchform">
+          <form @submit.prevent="updateSearch" id="searchform">
 
             <label>
               <input type="text" class="searchbox" v-model="searchTerm" placeholder="Search"/>
             </label>
-            {{ searchTerm }}
 
             <button type="submit" class="searchbutton">
               <!-- magnifying glass -->
@@ -96,9 +26,11 @@
         </td>
 
         <td>
-          <select v-model="selectedCategory" @change="changeCategory()">
-            <option disabled value="">Categories</option>
-            <option v-for="category in categories" v-bind:value="category.categoryId">{{ category.categoryTitle }}</option>
+          <select v-model="selectedCategory" @change="updateSearch()">
+            <option disabled selected hidden value="">Categories</option>
+            <option v-for="category in categories" v-bind:value="category.categoryId">
+              {{ category.categoryTitle }}
+            </option>
           </select>
         </td>
 
@@ -109,12 +41,11 @@
 
     <div id="auctions">
       <table class="auctionlist">
-        <tr v-for="(auction, i) in auctions" class="auctionlist">
+        <tr v-for="auction in auctions" class="auctionlist">
           <td>
             <img :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'" width="200">
           </td>
           <td>{{ auction.title }}</td>
-          <td>{{ i }}</td>
         </tr>
       </table>
     </div>
@@ -124,7 +55,11 @@
 
 
 <script>
+  import Navbar from './Navbar.vue'
+
   export default {
+    name: "Auctions",
+    components: {Navbar},
     data() {
       return {
         error: "",
@@ -132,18 +67,17 @@
         user: null,
         auctions: [],
         searchTerm: "",
-        selectedCategory: null,
+        selectedCategory: "",
         categories: []
       }
     },
     mounted: function () {
       // Get the logged in user
       this.getUser();
+
       // Get all the auctions and categories
       this.getAuctions();
       this.getCategories();
-      // Make dropdowns close when the user clicks off them
-      this.closeDropdownsOnClickOff();
     },
     methods: {
 
@@ -173,78 +107,12 @@
         console.log("above");
       },
 
-      toggleBuyingDropdown: function () {
-        document.getElementById("buyingDropdown").classList.toggle("show");
-      },
-
-      // Close dropdowns if the user clicks outside them
-      closeDropdownsOnClickOff: function () {
-
-        function closeAllDropdownsButOne(dropdownToNotClose) {
-          let dropdowns = document.getElementsByClassName("dropdown-content");
-          for (let i = 0; i < dropdowns.length; i++) {
-            let openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains('show') && openDropdown.id !== dropdownToNotClose) {
-              openDropdown.classList.remove('show');
-            }
-          }
-        }
-
-        window.onclick = function (event) {
-
-          // Not clicking on any dropdown
-          if (!event.target.matches('.dropbtn')) {
-            let dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-              let openDropdown = dropdowns[i];
-              if (openDropdown.classList.contains('show')) {
-                openDropdown.classList.remove('show');
-              }
-            }
-
-            // Clicking on selling dropdown
-          } else if (event.target.matches('#sellingdropbtn')) {
-            console.log("Matched selling button");
-            closeAllDropdownsButOne("sellingDropdown")
-
-            // Clicking on buying dropdown
-          } else if (event.target.matches('#buyingdropbtn')) {
-            console.log("Matched buying button");
-            closeAllDropdownsButOne("buyingDropdown")
-          }
-        }
-      },
-
-      toggleSellingDropdown: function () {
-        document.getElementById("sellingDropdown").classList.toggle("show");
-      },
-
       getUser: function () {
-        return "";
-        //todo actually code this
+
       },
 
-      openRegisterPage: function () {
-        alert("Register not yet implemented.");
-      },
-
-      logout: function () {
-        alert("Logout not yet implemented.");
-      },
-
-      goToAnotherPage: function (page) {
-        console.log("going home");
-        this.$router.push(page);
-      },
-      handleSubmit() {
-        // Send data to the server or update your stores and such.
-      },
-
-      changeCategory: function () {
-        console.log("Changed cat");
-        console.log(this.selectedCategory);
-        this.auctions = [{title:"Loading"}];
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions?category-id=' + this.selectedCategory)
+      updateSearch: function() {
+        this.$http.get('http://127.0.0.1:4941/api/v1/auctions?q=' + this.searchTerm + '&category-id=' + this.selectedCategory)
           .then(function (response) {
             console.log(response);
             this.auctions = response.data;
@@ -252,7 +120,6 @@
           }, function (error) {
             console.log(error);
           });
-
       }
     }
   }
