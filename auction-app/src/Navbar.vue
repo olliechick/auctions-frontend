@@ -14,7 +14,7 @@
       </td>
 
       <!-- User not logged in -->
-      <div v-if="user == null">
+      <div v-if="user != null">
         <td>
           <button type="button" class="btn actionbtn" data-toggle="modal" data-target="#loginModal">
             Log in
@@ -77,6 +77,10 @@
         }
       },
       mounted: function () {
+
+        this.closeDropdownsOnClickOff();
+        this.toggleBuyingDropdown();
+
 
       },
       methods: {
