@@ -5,11 +5,12 @@
 
     <navbar></navbar>
 
-    <!-- Search and category selector -->
+    <!-- Taskbar -->
 
     <table class="taskbar">
       <tr>
 
+        <!-- Search bar -->
         <td>
           <form @submit.prevent="updateSearch" id="searchform">
 
@@ -25,11 +26,25 @@
           </form>
         </td>
 
+        <!-- Category selector -->
+
         <td>
           <select v-model="selectedCategory" @change="updateSearch()">
             <option disabled selected hidden value="">Categories</option>
+            <option value="">all</option>
             <option v-for="category in categories" v-bind:value="category.categoryId">
               {{ category.categoryTitle }}
+            </option>
+          </select>
+        </td>
+
+        <!-- Auction status selector -->
+
+        <td>
+          <select v-model="selectedStatus" @change="updateSearch()">
+            <option disabled selected hidden value="">Status</option>
+            <option v-for="status in statuses" v-bind:value="status">
+              {{ status }}
             </option>
           </select>
         </td>
@@ -45,7 +60,7 @@
           <td>
             <img :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'" width="200">
           </td>
-          <td>{{ auction.title }}</td>
+          <td class="auctionListTitle">{{ auction.title }}</td>
         </tr>
       </table>
     </div>
@@ -64,17 +79,15 @@
       return {
         error: "",
         errorFlag: false,
-        user: null,
         auctions: [],
-        searchTerm: "",
+        searchTerm: null,
         selectedCategory: "",
-        categories: []
+        selectedStatus: "",
+        categories: [],
+        statuses: ["all", "active", "expired", "won", "upcoming"]
       }
     },
     mounted: function () {
-      // Get the logged in user
-      this.getUser();
-
       // Get all the auctions and categories
       this.getAuctions();
       this.getCategories();
@@ -82,11 +95,9 @@
     methods: {
 
       getAuctions: function () {
-        console.log("getting auctions");
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions')
           .then(function (response) {
             this.auctions = response.data;
-            console.log(response.data);
           }, function (error) {
             console.log(error);
           });
@@ -97,26 +108,17 @@
         this.$http.get('http://127.0.0.1:4941/api/v1/categories')
           .then(function (response) {
             this.categories = response.data;
-            console.log(response.data);
-            console.log(this.categories);
-            console.log("above2");
           }, function (error) {
             console.log(error);
           });
-        console.log(this.categories);
-        console.log("above");
-      },
-
-      getUser: function () {
-
       },
 
       updateSearch: function() {
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions?q=' + this.searchTerm + '&category-id=' + this.selectedCategory)
+        this.$http.get('http://127.0.0.1:4941/api/v1/auctions',
+          {params: {"q": this.searchTerm, "category-id": this.selectedCategory, "status": this.selectedStatus} })
           .then(function (response) {
-            console.log(response);
             this.auctions = response.data;
-            console.log(response.data);
+            console.log(response);
           }, function (error) {
             console.log(error);
           });

@@ -3,13 +3,18 @@ import App from './App.vue';
 import Auctions from './Auctions.vue';
 import Won from './Won.vue';
 import Register from './Register.vue';
-import Navbar from './Navbar.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
 
 import VueResource from 'vue-resource';
 Vue.use(VueResource);
+
+import BootstrapVue from 'bootstrap-vue'
+Vue.use(BootstrapVue);
+
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.http.options.emulateJSON = true;
 

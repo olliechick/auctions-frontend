@@ -1,151 +1,103 @@
 <template>
-<div>
-  <div v-if="errorFlag" style="color: red;">
-    {{ error }}
-  </div>
+  <div>
+    <div v-if="errorFlag" style="color: red;">
+      {{ error }}
+    </div>
 
-  <table class="taskbar">
-    <tr>
-
-      <td>
-        <button type="button" class="btn tabbtn" v-on:click="goToAnotherPage('/')">
-          Home
-        </button>
-      </td>
+    <div class="taskbar">
 
       <!-- User not logged in -->
-      <div v-if="user != null">
-        <td>
-          <button type="button" class="btn actionbtn" data-toggle="modal" data-target="#loginModal">
+      <div v-if="token == null">
+
+          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/')">
+            Home
+          </b-button>
+
+          <b-button :variant="'primary'" data-toggle="modal" data-target="#loginModal">
             Log in
-          </button>
-        </td>
-        <td>
-          <button type="button" class="btn actionbtn" v-on:click="goToAnotherPage('/register')">
+          </b-button>
+
+          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/register')">
             Register
-          </button>
-        </td>
+          </b-button>
+
       </div>
 
       <!-- User logged in -->
       <div v-else>
-        <td>
-          <div class="dropdown">
-            <button v-on:click="toggleBuyingDropdown()" id="buyingdropbtn" class="btn dropbtn">
-              Buying ▼
-            </button>
-            <div id="buyingDropdown" class="dropdown-content">
-              <a v-on:click="goToAnotherPage('/won')">Won</a>
-              <a v-on:click="goToAnotherPage('/bidding_on')">Bidding on</a>
-            </div>
-          </div>
-        </td>
 
-        <td>
-          <div class="dropdown">
-            <button v-on:click="toggleSellingDropdown()" id="sellingdropbtn" class="btn dropbtn">
-              Selling ▼
-            </button>
-            <div id="sellingDropdown" class="dropdown-content">
-              <a v-on:click="goToAnotherPage('/create')">Create auction</a>
-              <a v-on:click="goToAnotherPage('/current')">Items I'm selling</a>
-              <a v-on:click="goToAnotherPage('/sold')">Sold</a>
-              <a v-on:click="goToAnotherPage('/unsold')">Unsold</a>
-            </div>
-          </div>
-        </td>
-        <td>
-          <button type="button" class="btn actionbtn" v-on:click="logout()">
+          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/')">
+            Home
+          </b-button>
+
+          <b-dropdown :variant="'primary'" id="buyingDropdown" text="Buying">
+            <b-dropdown-item v-on:click="goToAnotherPage('/won')">Won</b-dropdown-item>
+            <b-dropdown-item v-on:click="goToAnotherPage('/bidding_on')">Bidding on</b-dropdown-item>
+          </b-dropdown>
+
+          <b-dropdown :variant="'primary'" id="sellingDropdown" text="Selling">
+            <b-dropdown-item v-on:click="goToAnotherPage('/create')">Create auction</b-dropdown-item>
+            <b-dropdown-item v-on:click="goToAnotherPage('/current')">Items I'm selling</b-dropdown-item>
+            <b-dropdown-item v-on:click="goToAnotherPage('/sold')">Sold</b-dropdown-item>
+            <b-dropdown-item v-on:click="goToAnotherPage('/unsold')">Unsold</b-dropdown-item>
+          </b-dropdown>
+
+          <b-button :variant="'primary'" v-on:click="logout()">
             Log out
-          </button>
-        </td>
+          </b-button>
+
       </div>
 
-    </tr>
-  </table>
-</div>
+    </div>
+  </div>
 </template>
 
 <script>
-    export default {
-      name: "Navbar",
-      data() {
-        return {
-          error: "",
-          errorFlag: false,
-          user: null
-        }
+  export default {
+    name: "Navbar",
+    data() {
+      return {
+        error: "",
+        errorFlag: false,
+        token: null
+      }
+    },
+    mounted: function () {
+      this.getToken();
+      console.log(this.token);
+    },
+    methods: {
+
+      goToAnotherPage: function (page) {
+        console.log("going home");
+        this.$router.push(page);
       },
-      mounted: function () {
 
-        this.closeDropdownsOnClickOff();
-        this.toggleBuyingDropdown();
+      logout: function () {
 
-
+        console.log("Logging out")
+        localStorage.removeItem("token"); //delete token
+        this.token = null;
+        console.log(this.token);
       },
-      methods: {
 
-        toggleBuyingDropdown: function () {
-          document.getElementById("buyingDropdown").classList.toggle("show");
-        },
+      getToken: function () {
+        this.token = localStorage.getItem("token");
+      },
 
-        toggleSellingDropdown: function () {
-          document.getElementById("sellingDropdown").classList.toggle("show");
-        },
+      login() {
+        this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
+          JSON.stringify({"username": this.username, "password": this.password}))
+          .then(function (response) {
+            localStorage.setItem("token", response.data["token"]); //store token
+            this.$router.push('/'); //go back home
+          }, function (error) {
+            console.log(error);
+          });
 
-        // Close dropdowns if the user clicks outside them
-        closeDropdownsOnClickOff: function () {
-
-          function closeAllDropdownsButOne(dropdownToNotClose) {
-            let dropdowns = document.getElementsByClassName("dropdown-content");
-            for (let i = 0; i < dropdowns.length; i++) {
-              let openDropdown = dropdowns[i];
-              if (openDropdown.classList.contains('show') && openDropdown.id !== dropdownToNotClose) {
-                openDropdown.classList.remove('show');
-              }
-            }
-          }
-
-          window.onclick = function (event) {
-
-            // Not clicking on any dropdown
-            if (!event.target.matches('.dropbtn')) {
-              let dropdowns = document.getElementsByClassName("dropdown-content");
-              for (let i = 0; i < dropdowns.length; i++) {
-                let openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains('show')) {
-                  openDropdown.classList.remove('show');
-                }
-              }
-
-              // Clicking on selling dropdown
-            } else if (event.target.matches('#sellingdropbtn')) {
-              console.log("Matched selling button");
-              closeAllDropdownsButOne("sellingDropdown")
-
-              // Clicking on buying dropdown
-            } else if (event.target.matches('#buyingdropbtn')) {
-              console.log("Matched buying button");
-              closeAllDropdownsButOne("buyingDropdown")
-            }
-          }
-        },
-
-        goToAnotherPage: function (page) {
-          console.log("going home");
-          this.$router.push(page);
-        },
-
-        logout: function () {
-          alert("Logout not yet implemented.");
-        },
-
-        getUser: function () {
-          return "";
-          //todo actually code this
-        }
       }
     }
+  }
 </script>
 
 <style scoped>
