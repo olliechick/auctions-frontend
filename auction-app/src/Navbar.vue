@@ -9,42 +9,46 @@
       <!-- User not logged in -->
       <div v-if="token == null">
 
-          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/')">
-            Home
-          </b-button>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/')">
+          Home
+        </b-button>
 
-          <b-button :variant="'primary'" data-toggle="modal" data-target="#loginModal">
-            Log in
-          </b-button>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" data-toggle="modal" data-target="#loginModal">
+          Log in
+        </b-button>
 
-          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/register')">
-            Register
-          </b-button>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/register')">
+          Register
+        </b-button>
 
       </div>
 
       <!-- User logged in -->
       <div v-else>
 
-          <b-button :variant="'primary'" v-on:click="goToAnotherPage('/')">
-            Home
-          </b-button>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/')">
+          Home
+        </b-button>
 
-          <b-dropdown :variant="'primary'" id="buyingDropdown" text="Buying">
-            <b-dropdown-item v-on:click="goToAnotherPage('/won')">Won</b-dropdown-item>
-            <b-dropdown-item v-on:click="goToAnotherPage('/bidding_on')">Bidding on</b-dropdown-item>
-          </b-dropdown>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="goToUserPage()">
+          Me
+        </b-button>
 
-          <b-dropdown :variant="'primary'" id="sellingDropdown" text="Selling">
-            <b-dropdown-item v-on:click="goToAnotherPage('/create')">Create auction</b-dropdown-item>
-            <b-dropdown-item v-on:click="goToAnotherPage('/current')">Items I'm selling</b-dropdown-item>
-            <b-dropdown-item v-on:click="goToAnotherPage('/sold')">Sold</b-dropdown-item>
-            <b-dropdown-item v-on:click="goToAnotherPage('/unsold')">Unsold</b-dropdown-item>
-          </b-dropdown>
+        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" id="buyingDropdown" text="Buying">
+          <b-dropdown-item v-on:click="$goToAnotherPage('/won')">Won</b-dropdown-item>
+          <b-dropdown-item v-on:click="$goToAnotherPage('/bidding_on')">Bidding on</b-dropdown-item>
+        </b-dropdown>
 
-          <b-button :variant="'primary'" v-on:click="logout()">
-            Log out
-          </b-button>
+        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" id="sellingDropdown" text="Selling">
+          <b-dropdown-item v-on:click="$goToAnotherPage('/create')">Create auction</b-dropdown-item>
+          <b-dropdown-item v-on:click="$goToAnotherPage('/current')">Items I'm selling</b-dropdown-item>
+          <b-dropdown-item v-on:click="$goToAnotherPage('/sold')">Sold</b-dropdown-item>
+          <b-dropdown-item v-on:click="$goToAnotherPage('/unsold')">Unsold</b-dropdown-item>
+        </b-dropdown>
+
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="logout()">
+          Log out
+        </b-button>
 
       </div>
 
@@ -59,42 +63,34 @@
       return {
         error: "",
         errorFlag: false,
-        token: null
+        token: null,
+        userId: null
       }
     },
     mounted: function () {
       this.getToken();
+      this.getUserId();
       console.log(this.token);
     },
     methods: {
 
-      goToAnotherPage: function (page) {
-        console.log("going home");
-        this.$router.push(page);
+      goToUserPage: function () {
+        this.$goToAnotherPage('users/' + this.userId);
       },
 
       logout: function () {
-
-        console.log("Logging out")
         localStorage.removeItem("token"); //delete token
         this.token = null;
-        console.log(this.token);
+        this.$goToAnotherPage('/'); //go back home
       },
 
       getToken: function () {
         this.token = localStorage.getItem("token");
       },
 
-      login() {
-        this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
-          JSON.stringify({"username": this.username, "password": this.password}))
-          .then(function (response) {
-            localStorage.setItem("token", response.data["token"]); //store token
-            this.$router.push('/'); //go back home
-          }, function (error) {
-            console.log(error);
-          });
-
+      getUserId: function () {
+        this.userId = localStorage.getItem("id");
+        console.log(this.userId);
       }
     }
   }

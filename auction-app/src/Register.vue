@@ -39,6 +39,7 @@
 
 <script>
   import Navbar from './Navbar.vue'
+
   let validator = require("email-validator");
 
   export default {
@@ -67,24 +68,13 @@
             "password": this.password
           }))
             .then(function (response) {
-              this.login();
+              this.$login(this.username, this.password);
               alert("Registration successful! You are now logged in, " + this.username);
             }, function (error) {
               alert("That username or email address is already taken." /* or some other error */);
               console.log(error);
             });
         }
-      },
-      login() {
-        this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
-          JSON.stringify({"username": this.username, "password": this.password}))
-          .then(function(response) {
-            localStorage.setItem("token", response.data["token"]); //store token
-            this.$router.push('/'); //go back home
-          }, function (error) {
-            console.log(error);
-          });
-
       }
     }
   }

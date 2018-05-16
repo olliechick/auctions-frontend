@@ -13,7 +13,7 @@ h1.title {
   text-decoration: none;
   width: auto;
   margin: 3px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   padding: 12px;
 }
 
@@ -31,9 +31,4 @@ tr.auctionlist:hover {
 /* The name of an auction in a list of auctions */
 .auctionListTitle {
   font-size: 20px;
-}
-
-/*  ================= Text input boxes ================= */
-.searchbox {
-  font-size:20px;
 }

@@ -6,51 +6,37 @@
     <navbar></navbar>
 
     <!-- Taskbar -->
+    <b-form inline @submit.prevent="updateSearch" id="searchform" class="taskbar">
 
-    <table class="taskbar">
-      <tr>
+      <!-- Search box -->
+      <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
+        <b-form-input v-model="searchTerm" ></b-form-input>
+        <b-input-group-append>
+          <b-btn class="mb-2 mr-sm-2 mb-sm-0" variant="primary" type="submit">
+            <!-- magnifying glass -->
+            <div style="transform: rotate(-45deg);">&#9906;</div>
+          </b-btn>
+        </b-input-group-append>
+      </b-input-group>
 
-        <!-- Search bar -->
-        <td>
-          <form @submit.prevent="updateSearch" id="searchform">
+      <!-- Category selector -->
+      <b-form-select v-model="selectedCategory" class="mb-2 mr-sm-2 mb-sm-0" @input="updateSearch()">
+        <option disabled selected hidden value="">Category</option>
+        <option value="">all</option>
+        <option v-for="category in categories" v-bind:value="category.categoryId">
+          {{ category.categoryTitle }}
+        </option>
+      </b-form-select>
 
-            <label>
-              <input type="text" class="searchbox" v-model="searchTerm" placeholder="Search"/>
-            </label>
+      <!-- Auction status selector -->
+      <b-form-select v-model="selectedStatus" class="mb-2 mr-sm-2 mb-sm-0" @input="updateSearch()">
+        <option disabled selected hidden value="">Status</option>
+        <option v-for="status in statuses" v-bind:value="status">
+          {{ status }}
+        </option>
+      </b-form-select>
 
-            <button type="submit" class="searchbutton">
-              <!-- magnifying glass -->
-              <div style="transform: rotate(-45deg);">&#9906;</div>
-            </button>
-
-          </form>
-        </td>
-
-        <!-- Category selector -->
-
-        <td>
-          <select v-model="selectedCategory" @change="updateSearch()">
-            <option disabled selected hidden value="">Categories</option>
-            <option value="">all</option>
-            <option v-for="category in categories" v-bind:value="category.categoryId">
-              {{ category.categoryTitle }}
-            </option>
-          </select>
-        </td>
-
-        <!-- Auction status selector -->
-
-        <td>
-          <select v-model="selectedStatus" @change="updateSearch()">
-            <option disabled selected hidden value="">Status</option>
-            <option v-for="status in statuses" v-bind:value="status">
-              {{ status }}
-            </option>
-          </select>
-        </td>
-
-      </tr>
-    </table>
+    </b-form>
 
     <!-- Auction list -->
 
@@ -113,9 +99,9 @@
           });
       },
 
-      updateSearch: function() {
+      updateSearch: function () {
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions',
-          {params: {"q": this.searchTerm, "category-id": this.selectedCategory, "status": this.selectedStatus} })
+          {params: {"q": this.searchTerm, "category-id": this.selectedCategory, "status": this.selectedStatus}})
           .then(function (response) {
             this.auctions = response.data;
             console.log(response);
