@@ -12,23 +12,19 @@ h1.title {
   display: block;
   text-decoration: none;
   width: auto;
-  margin: 3px;
   margin-bottom: 10px;
   padding: 12px;
 }
 
-/* ================= Tables ================= */
+/* ================= Auction list ================= */
 
-.auctionlist {
-  border-spacing: 0;
-  border-collapse: separate;
-}
-
-tr.auctionlist:hover {
-  background-color: #f5f5f5;
-}
-
-/* The name of an auction in a list of auctions */
-.auctionListTitle {
+/* A listing of an auction */
+.auctionListItem {
   font-size: 20px;
+}
+
+/* The image of an auction */
+.auctionListPhoto {
+  max-height: 200px;
+  max-width: 200px
 }

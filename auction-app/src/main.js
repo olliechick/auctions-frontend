@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue';
 import Auctions from './Auctions.vue';
 import Won from './Won.vue';
+import User from './User.vue';
 import Register from './Register.vue';
 
 import VueRouter from 'vue-router';
@@ -32,6 +33,11 @@ const routes = [
     path: "/register",
     name: "register",
     component: Register
+  },
+  {
+    path:"/users/:userId",
+    name: "user",
+    component: User
   }
 ];
 
@@ -57,6 +63,14 @@ Vue.mixin({
     $goToAnotherPage: function (page) {
       this.$router.push(page);
     },
+
+    $getToken: function () {
+      return localStorage.getItem("token");
+    },
+
+    $getUserId: function () {
+      return localStorage.getItem("id");
+    }
   }
 });
 

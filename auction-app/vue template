@@ -1,0 +1,28 @@
+<template>
+  <div>
+
+    <h1 class="title"> __TITLE__ </h1>
+
+    <navbar></navbar>
+
+  </div>
+</template>
+
+<script>
+  import Navbar from './Navbar.vue'
+
+  export default {
+    name: "__NAME__",
+    components: {Navbar},
+    data() {
+      return {}
+    },
+    mounted: function () {
+    },
+    methods: {}
+  }
+</script>
+
+<style scoped>
+
+</style>

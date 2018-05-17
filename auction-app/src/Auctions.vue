@@ -10,7 +10,7 @@
 
       <!-- Search box -->
       <b-input-group class="mb-2 mr-sm-2 mb-sm-0">
-        <b-form-input v-model="searchTerm" ></b-form-input>
+        <b-form-input v-model="searchTerm"></b-form-input>
         <b-input-group-append>
           <b-btn class="mb-2 mr-sm-2 mb-sm-0" variant="primary" type="submit">
             <!-- magnifying glass -->
@@ -40,16 +40,15 @@
 
     <!-- Auction list -->
 
-    <div id="auctions">
-      <table class="auctionlist">
-        <tr v-for="auction in auctions" class="auctionlist">
-          <td>
-            <img :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'" width="200">
-          </td>
-          <td class="auctionListTitle">{{ auction.title }}</td>
-        </tr>
-      </table>
-    </div>
+    <b-list-group v-for="auction in auctions">
+      <b-list-group-item :to="'/auctions/' + auction.id" class="auctionListItem">
+        <b-img class="auctionListPhoto" :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'"/>
+        {{ auction.title }}
+      </b-list-group-item>
+    </b-list-group>
+
+    <b-pagination @input="updateSearch()" align="center" class="mt-2" v-model="currentPage" :total-rows="numberOfAuctions"
+                  :per-page="itemsPerPage" :limit="10"/>
 
   </div>
 </template>
@@ -70,7 +69,10 @@
         selectedCategory: "",
         selectedStatus: "",
         categories: [],
-        statuses: ["all", "active", "expired", "won", "upcoming"]
+        statuses: ["all", "active", "expired", "won", "upcoming"],
+        itemsPerPage: 2,
+        currentPage: 1,
+        numberOfAuctions: 0
       }
     },
     mounted: function () {
@@ -83,7 +85,9 @@
       getAuctions: function () {
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions')
           .then(function (response) {
-            this.auctions = response.data;
+            this.auctions = response.data.sort();
+            this.numberOfAuctions = this.auctions.length;
+            this.updateSearch();
           }, function (error) {
             console.log(error);
           });
@@ -100,14 +104,21 @@
       },
 
       updateSearch: function () {
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions',
-          {params: {"q": this.searchTerm, "category-id": this.selectedCategory, "status": this.selectedStatus}})
-          .then(function (response) {
-            this.auctions = response.data;
-            console.log(response);
-          }, function (error) {
-            console.log(error);
-          });
+        this.$http.get('http://127.0.0.1:4941/api/v1/auctions', {
+            params: {
+              "q": this.searchTerm,
+              "category-id": this.selectedCategory,
+              "status": this.selectedStatus,
+              "startIndex": (this.itemsPerPage * this.currentPage-1) - 1,
+              "count": this.itemsPerPage
+            }
+          }
+        ).then(function (response) {
+          this.auctions = response.data;
+          console.log(response);
+        }, function (error) {
+          console.log(error);
+        });
       }
     }
   }

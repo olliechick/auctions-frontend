@@ -9,15 +9,15 @@
       <!-- User not logged in -->
       <div v-if="token == null">
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/')">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="$goToAnotherPage('/')">
           Home
         </b-button>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" data-toggle="modal" data-target="#loginModal">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' data-toggle="modal" data-target="#loginModal">
           Log in
         </b-button>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/register')">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="$goToAnotherPage('/register')">
           Register
         </b-button>
 
@@ -26,27 +26,27 @@
       <!-- User logged in -->
       <div v-else>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="$goToAnotherPage('/')">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' to="/">
           Home
         </b-button>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="goToUserPage()">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="goToUserPage()">
           Me
         </b-button>
 
-        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" id="buyingDropdown" text="Buying">
+        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" variant='primary' id="buyingDropdown" text="Buying">
           <b-dropdown-item v-on:click="$goToAnotherPage('/won')">Won</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/bidding_on')">Bidding on</b-dropdown-item>
         </b-dropdown>
 
-        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" id="sellingDropdown" text="Selling">
+        <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" variant='primary' id="sellingDropdown" text="Selling">
           <b-dropdown-item v-on:click="$goToAnotherPage('/create')">Create auction</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/current')">Items I'm selling</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/sold')">Sold</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/unsold')">Unsold</b-dropdown-item>
         </b-dropdown>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" :variant="'primary'" v-on:click="logout()">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="logout()">
           Log out
         </b-button>
 
@@ -68,14 +68,15 @@
       }
     },
     mounted: function () {
-      this.getToken();
-      this.getUserId();
+      this.token = this.$getToken();
+      this.userId = this.$getUserId();
       console.log(this.token);
     },
     methods: {
 
       goToUserPage: function () {
-        this.$goToAnotherPage('users/' + this.userId);
+        console.log(this.userId);
+        this.$goToAnotherPage('/users/' + this.userId);
       },
 
       logout: function () {
@@ -83,15 +84,6 @@
         this.token = null;
         this.$goToAnotherPage('/'); //go back home
       },
-
-      getToken: function () {
-        this.token = localStorage.getItem("token");
-      },
-
-      getUserId: function () {
-        this.userId = localStorage.getItem("id");
-        console.log(this.userId);
-      }
     }
   }
 </script>
