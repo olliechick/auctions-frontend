@@ -94,7 +94,6 @@
       },
 
       getCategories: function () {
-        console.log("getting cats");
         this.$http.get('http://127.0.0.1:4941/api/v1/categories')
           .then(function (response) {
             this.categories = response.data;
@@ -115,7 +114,6 @@
           }
         ).then(function (response) {
           this.auctions = response.data;
-          console.log(response);
         }, function (error) {
           console.log(error);
         });

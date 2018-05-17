@@ -8,6 +8,13 @@
     </div>
 
     <!-- User logged in -->
+    <div v-else-if="user.username == ''">
+
+      <h1 class="title"> User details </h1>
+      <navbar></navbar>
+
+      <b-table striped hover :items="[user]"></b-table>
+    </div>
     <div v-else>
 
       <h1 class="title"> User details: {{ user.username }} </h1>
@@ -32,7 +39,13 @@
     data() {
       return {
         token: '',
-        user: {username: ""}
+        user: {username: "", givenName: "", familyName: ""}
+      }
+    },
+    watch: {
+      '$route' () {
+        this.user = {username: "", givenName: "", familyName: ""};
+        this.getUser();
       }
     },
     mounted: function () {
@@ -42,7 +55,6 @@
     methods: {
       getUser() {
         let userId = this.$route.params.userId;
-        console.log(userId);
         this.$http.get('http://127.0.0.1:4941/api/v1/users/' + userId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.user = response.data;
@@ -50,7 +62,6 @@
             this.user = null;
             console.log(error);
           });
-
       }
     }
   }

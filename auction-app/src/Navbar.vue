@@ -26,7 +26,7 @@
       <!-- User logged in -->
       <div v-else>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' to="/">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="$goToAnotherPage('/')">
           Home
         </b-button>
 
@@ -70,12 +70,10 @@
     mounted: function () {
       this.token = this.$getToken();
       this.userId = this.$getUserId();
-      console.log(this.token);
     },
     methods: {
 
       goToUserPage: function () {
-        console.log(this.userId);
         this.$goToAnotherPage('/users/' + this.userId);
       },
 
