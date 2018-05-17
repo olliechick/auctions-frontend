@@ -23,13 +23,9 @@
     },
     mounted: function () {
       // Get the logged in user
-      this.getUser();
+      this.$getToken();
     },
     methods: {
-
-      getUser: function () {
-
-      }
     }
   }
 </script>
