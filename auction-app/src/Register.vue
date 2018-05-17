@@ -71,7 +71,11 @@
               this.$login(this.username, this.password);
               alert("Registration successful! You are now logged in, " + this.username);
             }, function (error) {
-              alert("That username or email address is already taken." /* or some other error */);
+              if (error.status === 400) {
+                alert("That username or email address is already taken.");
+              } else {
+                alert("Server error. Please try again later.");
+              }
               console.log(error);
             });
         }

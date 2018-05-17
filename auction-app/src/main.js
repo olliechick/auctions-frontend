@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import App from './App.vue';
-import Auctions from './Auctions.vue';
+import Home from './Home.vue';
 import Won from './Won.vue';
 import User from './User.vue';
 import Register from './Register.vue';
+import Auction from './Auction.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -22,7 +23,7 @@ Vue.http.options.emulateJSON = true;
 const routes = [
   {
     path: "/",
-    component: Auctions
+    component: Home
   },
   {
     path: "/won",
@@ -38,6 +39,11 @@ const routes = [
     path:"/users/:userId",
     name: "user",
     component: User
+  },
+  {
+    path:"/auctions/:auctionId",
+    name: "auction",
+    component: Auction
   }
 ];
 
@@ -61,6 +67,8 @@ Vue.mixin({
     },
 
     $goToAnotherPage: function (page) {
+      console.log("going");
+      console.log(page);
       this.$router.push(page);
     },
 

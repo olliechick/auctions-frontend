@@ -4,6 +4,7 @@
 h1.title {
   text-align: center;
   font-family: Arial, Helvetica, sans-serif;
+  margin-top:20px;
 }
 
 /* The taskbar at the top of each page */
@@ -27,4 +28,8 @@ h1.title {
 .auctionListPhoto {
   max-height: 200px;
   max-width: 200px
+}
+
+.bidAmount {
+  font-size: 150%;
 }

@@ -58,7 +58,7 @@
   import Navbar from './Navbar.vue'
 
   export default {
-    name: "Auctions",
+    name: "Home",
     components: {Navbar},
     data() {
       return {

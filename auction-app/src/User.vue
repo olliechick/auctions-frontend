@@ -3,18 +3,33 @@
 
     <!-- User not logged in -->
     <div v-if="user == null">
-      <h1 class="title"> Unauthorised. </h1>
+      <h1 class="title"> User details </h1>
       <navbar></navbar>
+
+      <div v-if="errorCode === 401">
+        <b-alert variant="danger" show>Error: Unauthorised.</b-alert>
+      </div>
+
+      <div v-else-if="errorCode === 404">
+        <b-alert variant="danger" show>Error: User does not exist.</b-alert>
+      </div>
+
+      <div v-else>
+        <b-alert variant="danger" show>Error.</b-alert>
+      </div>
+
     </div>
 
-    <!-- User logged in -->
-    <div v-else-if="user.username == ''">
+    <!-- Loading -->
+    <div v-else-if="user.username === ''">
 
       <h1 class="title"> User details </h1>
       <navbar></navbar>
 
-      <b-table striped hover :items="[user]"></b-table>
+      <b-alert variant="info" show>Loading</b-alert>
     </div>
+
+    <!-- User logged in -->
     <div v-else>
 
       <h1 class="title"> User details: {{ user.username }} </h1>
@@ -39,7 +54,8 @@
     data() {
       return {
         token: '',
-        user: {username: "", givenName: "", familyName: ""}
+        user: {username: "", givenName: "", familyName: ""},
+        errorCode: 0
       }
     },
     watch: {
@@ -59,8 +75,9 @@
           .then(function (response) {
             this.user = response.data;
           }, function (error) {
-            this.user = null;
             console.log(error);
+            this.errorCode = error.status;
+            this.user = null;
           });
       }
     }
