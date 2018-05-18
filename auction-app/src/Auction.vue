@@ -18,7 +18,7 @@
         <b-col>
 
           <!-- Edit button, for the owner of the auction -->
-          <b-button v-if="this.auction.seller.id !== this.$getUserId()" block variant="warning"
+          <b-button v-if="this.auction.seller.id !== this.$getUserId()" block variant="primary"
                     v-on:click="$goToAnotherPage('/auctions/' + auctionId + '/edit')">
             Edit
           </b-button>

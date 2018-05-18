@@ -78,7 +78,7 @@
     mounted: function () {
       // Get all the auctions and categories
       this.getAuctions();
-      this.getCategories();
+      this.$getCategories();
     },
     methods: {
 
@@ -86,21 +86,10 @@
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions')
           .then(function (response) {
             this.auctions = response.data;
-            console.log(this.auctions);
             this.auctions.forEach(function (part, index, theArray) {
-              console.log(theArray[index].id);
             });
             this.numberOfAuctions = this.auctions.length;
             this.updateSearch();
-          }, function (error) {
-            console.log(error);
-          });
-      },
-
-      getCategories: function () {
-        this.$http.get('http://127.0.0.1:4941/api/v1/categories')
-          .then(function (response) {
-            this.categories = response.data;
           }, function (error) {
             console.log(error);
           });

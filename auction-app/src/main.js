@@ -121,6 +121,16 @@ Vue.mixin({
           this.user = null;
         });
     },
+
+    $getCategories: function () {
+      console.log("getting");
+      this.$http.get('http://127.0.0.1:4941/api/v1/categories')
+        .then(function (response) {
+          this.categories = response.data;
+        }, function (error) {
+          console.log(error);
+        });
+    }
   }
 });
 
