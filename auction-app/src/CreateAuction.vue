@@ -9,13 +9,6 @@
       <b-form-group horizontal label="Auction title:" label-for="auctionTitle">
         <b-form-input id="auctionTitle"></b-form-input>
       </b-form-group>
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-            <date-picker v-model="date" :config="config"></date-picker>
-          </div>
-        </div>
-      </div>
     </b-form-group>
 
 
