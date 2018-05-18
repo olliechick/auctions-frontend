@@ -40,7 +40,7 @@
         </b-dropdown>
 
         <b-dropdown class="mb-2 mr-sm-2 mb-sm-0" variant='primary' id="sellingDropdown" text="Selling">
-          <b-dropdown-item v-on:click="$goToAnotherPage('/create')">Create auction</b-dropdown-item>
+          <b-dropdown-item v-on:click="$goToAnotherPage('/auctions/create')">Create auction</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/current')">Items I'm selling</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/sold')">Sold</b-dropdown-item>
           <b-dropdown-item v-on:click="$goToAnotherPage('/unsold')">Unsold</b-dropdown-item>

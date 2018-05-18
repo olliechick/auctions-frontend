@@ -5,6 +5,8 @@ import Won from './Won.vue';
 import User from './User.vue';
 import Register from './Register.vue';
 import Auction from './Auction.vue';
+import EditAuction from './EditAuction.vue';
+import CreateAuction from './CreateAuction.vue';
 
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -14,6 +16,10 @@ Vue.use(VueResource);
 
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
+
+
+// Import date picker css
+import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
@@ -41,9 +47,19 @@ const routes = [
     component: User
   },
   {
+    path:"/auctions/create",
+    name: "createAuction",
+    component: CreateAuction
+  },
+  {
     path:"/auctions/:auctionId",
     name: "auction",
     component: Auction
+  },
+  {
+    path:"/auctions/:auctionId/edit",
+    name: "editAuction",
+    component: EditAuction
   }
 ];
 
@@ -78,7 +94,33 @@ Vue.mixin({
 
     $getUserId: function () {
       return localStorage.getItem("id");
-    }
+    },
+
+    $getAuction() {
+      this.auctionId = this.$route.params.auctionId;
+      this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
+        .then(function (response) {
+          console.log("nice");
+          this.errorMessage = '';
+          this.auction = response.data;
+          this.auction.starts = new Date(this.auction.startDateTime).toLocaleString();
+          this.auction.ends = new Date(this.auction.endDateTime).toLocaleString();
+          console.log(this.auction);
+          console.log(this.auction.currentBid);
+        }, function (error) {
+          console.log(error);
+          if (error.status === 400) {
+            this.errorMessage = "400: Bad request";
+          } else if (error.status === 404) {
+            this.errorMessage = "401: Unauthorized";
+          } else if (error.status === 404) {
+            this.errorMessage = "404: Auction not found.";
+          } else {
+            this.errorMessage = "Error " + error.status;
+          }
+          this.user = null;
+        });
+    },
   }
 });
 
