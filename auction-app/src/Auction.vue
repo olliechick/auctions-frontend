@@ -74,7 +74,7 @@
 
             <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
               <b-card-body>
-                <b-list-item flush v-for="bid in bidHistory.slice(1)">
+                <b-list-item flush v-for="bid in bidHistory.slice(1)" :key="bid.amount">
                   <b-list-group-item>
                     <div class="bidAmount">{{ bid.amountInDollars }}</div>
                     {{ bid.time }} <br/>
