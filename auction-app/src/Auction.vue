@@ -17,7 +17,7 @@
         </b-col>
         <b-col>
 
-          <!-- Edit button, for the owner of the auction -->
+          <!-- Edit button, for the owner of the auction todo check it is before starting time-->
           <b-button v-if="this.auction.seller.id === this.$getUserId()" block variant="primary"
                     v-on:click="$goToAnotherPage('/auctions/' + auctionId + '/edit')">
             Edit

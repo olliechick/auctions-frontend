@@ -5,17 +5,20 @@
 
     <navbar></navbar>
 
-    I'll probably replace this with a special case of create.
+    <fill-out-auction-details></fill-out-auction-details>
 
   </div>
 </template>
 
 <script>
   import Navbar from './Navbar.vue'
+  import FillOutAuctionDetails from './FillOutAuctionDetails.vue'
 
   export default {
-    name: "__NAME__",
-    components: {Navbar},
+    name: "edit",
+    components: {
+      FillOutAuctionDetails,
+      Navbar},
     data() {
       return {
         auction: {title: "test"}
