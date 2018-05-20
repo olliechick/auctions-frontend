@@ -93,26 +93,23 @@ Vue.mixin({
     },
 
     $getUserId: function () {
-      return localStorage.getItem("id");
+      return parseInt(localStorage.getItem("id"));
     },
 
     $getAuction() {
       this.auctionId = this.$route.params.auctionId;
       this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
         .then(function (response) {
-          console.log("nice");
           this.errorMessage = '';
           this.auction = response.data;
           this.auction.starts = new Date(this.auction.startDateTime).toLocaleString();
           this.auction.ends = new Date(this.auction.endDateTime).toLocaleString();
-          console.log(this.auction);
-          console.log(this.auction.currentBid);
         }, function (error) {
           console.log(error);
           if (error.status === 400) {
             this.errorMessage = "400: Bad request";
           } else if (error.status === 404) {
-            this.errorMessage = "401: Unauthorized";
+            this.errorMessage = "401: Unauthorised";
           } else if (error.status === 404) {
             this.errorMessage = "404: Auction not found.";
           } else {
@@ -123,7 +120,6 @@ Vue.mixin({
     },
 
     $getCategories: function () {
-      console.log("getting");
       this.$http.get('http://127.0.0.1:4941/api/v1/categories')
         .then(function (response) {
           this.categories = response.data;

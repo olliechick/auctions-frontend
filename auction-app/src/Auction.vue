@@ -18,7 +18,7 @@
         <b-col>
 
           <!-- Edit button, for the owner of the auction -->
-          <b-button v-if="this.auction.seller.id !== this.$getUserId()" block variant="primary"
+          <b-button v-if="this.auction.seller.id === this.$getUserId()" block variant="primary"
                     v-on:click="$goToAnotherPage('/auctions/' + auctionId + '/edit')">
             Edit
           </b-button>
@@ -33,7 +33,7 @@
                 {{ auction.seller.username }}
               </b-link>
               <br/>
-
+<!--todo replace Starts and Ends with context-dependant string: Starts/Started and Ends/Ended-->
               <b>Starts</b>: {{auction.starts}}
               <br/>
 
@@ -44,7 +44,7 @@
           </b-card>
 
           <!-- Place a bid form (if user is eligible to bid) -->
-          <b-form v-if="userIsEligibleToBid()" inline class="mb-2 mt-2">
+          <b-form v-if="userIsEligibleToBid()" class="mb-2 mt-2">
             <b-input-group prepend="$">
               <b-form-input :value="getSuggestedBid()"></b-form-input>
               <b-input-group-append>
@@ -74,7 +74,7 @@
 
             <b-collapse id="accordion1" accordion="my-accordion" role="tabpanel">
               <b-card-body>
-                <b-list-item flush v-for="bid in bidHistory.slice(1)" :key="bid.amount">
+                <b-list-group flush v-for="bid in bidHistory.slice(1)" :key="bid.amount">
                   <b-list-group-item>
                     <div class="bidAmount">{{ bid.amountInDollars }}</div>
                     {{ bid.time }} <br/>
@@ -83,7 +83,7 @@
                     </b-link>
                   </b-list-group-item>
 
-                </b-list-item>
+                </b-list-group>
                 <div v-if="bidHistory.length === 0">
                   No bids!
                 </div>
@@ -148,7 +148,6 @@
               });
               theArray[index].time = new Date(theArray[index].datetime).toLocaleString();
             });
-            console.log(this.bidHistory);
           }, function (error) {
             console.log(error);
           })
@@ -157,16 +156,20 @@
       /**
        * Returns true if the logged-in user can bid on this auction.
        * Specifically, if:
-       * - They are logged in
-       * - They are not the owner of this auction
-       * - The auctions has started but not ended
+       * - they are logged in, and
+       * - they are not the owner of this auction, and
+       * - the auction has started, but
+       * - not ended
        * @returns {boolean} true if the logged-in user can bid on the auction
        */
       userIsEligibleToBid() {
-        return (this.$getUserId() != null
+        //todo revert!!
+        let userId = this.$getUserId();
+        return true;/*(userId !== null && !isNaN(userId)
           && this.auction.seller.id !== this.$getUserId()
           && this.auction.startDateTime <= Date.now()
           && this.auction.endDateTime > Date.now());
+          // hack to force end of block comment */
       },
 
       /**
@@ -176,13 +179,10 @@
        * @returns {string}
        */
       getSuggestedBid() {
-        console.log("RESERVE " + this.auction.reservePrice / 100);
-        console.log(this.bidHistory);
         let dollars;
         if (this.bidHistory.length === 0) {
           // no bids yet
-          console.log("no bids");
-          dollars = this.auction.reservePrice / 100;
+          dollars = this.auction.startingBid / 100;
         } else {
           dollars = (this.auction.currentBid + 1) / 100;
         }
