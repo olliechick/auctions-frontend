@@ -17,12 +17,9 @@ Vue.use(VueResource);
 import BootstrapVue from 'bootstrap-vue'
 Vue.use(BootstrapVue);
 
-
-// Import date picker css
-import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
-
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
 Vue.http.options.emulateJSON = true;
 
@@ -48,7 +45,7 @@ const routes = [
   },
   {
     path:"/auctions/create",
-    name: "createAuction",
+    name: "saveAuction",
     component: CreateAuction
   },
   {
