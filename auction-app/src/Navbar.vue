@@ -13,13 +13,21 @@
           Home
         </b-button>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' data-toggle="modal" data-target="#loginModal">
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary'  v-b-modal.loginModal>
           Log in
         </b-button>
 
         <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-on:click="$goToAnotherPage('/register')">
           Register
         </b-button>
+
+        <b-modal id="loginModal" title="Log in">
+          <b-form>
+            <b-form-input placeholder="Username"></b-form-input>
+            <b-form-input placeholder="Email"></b-form-input>
+            <b-form-input placeholder="Password"></b-form-input>
+          </b-form>
+        </b-modal>
 
       </div>
 

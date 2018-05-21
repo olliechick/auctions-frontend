@@ -88,6 +88,7 @@
         <!-- Photo -->
         <b-form-file accept="image/jpeg, image/png" class="mb-2" v-model="file"
                      placeholder="Upload a photo..." id="imageForm"></b-form-file>
+        <b-button class="mb-2" variant="danger" v-on:click="deletePhoto()">Delete photo</b-button>
 
         <b-form-group label="Description:" label-for="auctionTitle" class="mb-2">
           <b-form-textarea id="textarea1" v-model="description" :rows="3"></b-form-textarea>
@@ -96,7 +97,9 @@
       </b-card>
 
       <!-- "Save auction" submit button todo move this (maybe to middle?)-->
-      <b-btn variant="primary" type="submit">Save auction</b-btn>
+      <b-card bg-variant="light" class="m-4">
+        <b-btn variant="primary" type="submit">Save auction</b-btn>
+      </b-card>
 
     </b-form>
 
@@ -167,9 +170,9 @@
             this.title = auction.title;
             this.selectedCategory = auction.categoryId;
 
-            this.startingPrice = auction.startingBid/100;
+            this.startingPrice = auction.startingBid / 100;
             this.useStartingPrice = auction.startingBid === auction.reservePrice;
-            this.reservePrice = auction.reservePrice/100;
+            this.reservePrice = auction.reservePrice / 100;
 
             let d = new Date(auction.startDateTime);
             let year = d.getFullYear();
@@ -207,6 +210,22 @@
             this.user = null;
           });
 
+      },
+
+      deletePhoto() {
+        this.$http.delete('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos',{headers: {'x-authorization': this.token}})
+          .then(function(response) {
+            alert("Photo deleted!");
+          }, function(error) {
+            if (error.status === 404) {
+              alert("Eroror 404: Auction not found.");
+            } else if (error.status === 401) {
+              alert("Error 401: Unauthorised.");
+            } else {
+              alert("Server error. Please try again later.");
+            }
+            console.log(error);
+          });
       },
 
       getImageTypeFromFile: function (file) {
@@ -416,8 +435,7 @@
         let minute = ('0' + d.getMinutes()).slice(-2);       // add 0 padding
         this.endDate = year + "-" + month + "-" + date;
         this.endTime = hour + ":" + minute;
-      }
-      ,
+      },
 
       /**
        * Sets the start time to the current time if the "Now" checkbox is checked.
@@ -432,41 +450,35 @@
         this.startDate = year + "-" + month + "-" + date;
         this.startTime = hour + ":" + minute;
 
-      }
-      ,
+      },
 
       updateUseCurrentTime: function (checked) {
         if (checked) {
           this.setStartTimeToCurrent();
         }
-      }
-      ,
+      },
 
       updateStartTime() {
         if (this.useCurrentTime) {
           this.setStartTimeToCurrent();
         }
-      }
-      ,
+      },
 
       setReservePriceToStarting() {
         this.reservePrice = this.startingPrice;
-      }
-      ,
+      },
 
       updateReservePrice() {
         if (this.useStartingPrice) {
           this.setReservePriceToStarting();
         }
-      }
-      ,
+      },
 
       updateUseStartingPrice: function (checked) {
         if (checked) {
           this.setReservePriceToStarting();
         }
-      }
-      ,
+      },
 
       startingPriceIsValid() {
         if (this.submitAttempted) {
@@ -476,8 +488,7 @@
             return false;
           }
         }
-      }
-      ,
+      },
 
       reservePriceIsValid() {
         if (this.submitAttempted && !this.useStartingPrice) {
@@ -487,8 +498,7 @@
             return false;
           }
         }
-      }
-      ,
+      },
 
       /**
        * Returns true if it is a valid dollar amount, i.e.:
