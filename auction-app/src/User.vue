@@ -35,11 +35,28 @@
       <h1 class="title"> User details: {{ user.username }} </h1>
       <navbar></navbar>
 
-      <b-table striped hover :items="[user]"></b-table>
+      <div>
+        <b-card inline class="m-3">
+
+          <div v-if="user.email || user.accountBalance">
+            <b-button style="float:right" variant="primary">Edit</b-button>
+          </div>
+
+          <div v-if="user.givenName || user.familyName">
+            <b>Name:</b> {{ user.givenName }} {{user.familyName}} <br/>
+          </div>
+
+          <b>Username:</b> {{ user.username }} <br/>
+
+          <div v-if="user.email || user.accountBalance">
+            <b>Email:</b> {{ user.email }} <br/>
+            <b>Account balance:</b> {{ user.accountBalance }} <br/>
+          </div>
+
+        </b-card>
+      </div>
 
     </div>
-
-
 
 
   </div>
@@ -59,7 +76,7 @@
       }
     },
     watch: {
-      '$route' () {
+      '$route'() {
         this.user = {username: "", givenName: "", familyName: ""};
         this.getUser();
       }
