@@ -68,12 +68,11 @@ const router = new VueRouter({
 Vue.mixin({
   methods: {
     $login: function(username, password) {
-      this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
+      return this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
         .then(function(response) {
           localStorage.setItem("token", response.data["token"]); //store token
           localStorage.setItem("id", response.data["id"]); //store id
-          this.$router.push('/'); //go back home
         }, function (error) {
           console.log(error);
         });

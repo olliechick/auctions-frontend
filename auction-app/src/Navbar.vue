@@ -13,7 +13,7 @@
           Home
         </b-button>
 
-        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary'  v-b-modal.loginModal>
+        <b-button class="mb-2 mr-sm-2 mb-sm-0" variant='primary' v-b-modal.loginModal>
           Log in
         </b-button>
 
@@ -23,10 +23,15 @@
 
         <b-modal id="loginModal" title="Log in">
           <b-form>
-            <b-form-input placeholder="Username"></b-form-input>
-            <b-form-input placeholder="Email"></b-form-input>
-            <b-form-input placeholder="Password"></b-form-input>
+            <b-form-input class="mb-2" placeholder="Username" v-model="username"></b-form-input>
+            <b-form-input class="mb-2" placeholder="Email" v-model="email" autocomplete="email"></b-form-input>
+            <b-form-input class="mb-2" placeholder="Password" v-model="password"></b-form-input>
           </b-form>
+          <div slot="modal-footer" class="w-100">
+            <b-btn size="m-2" class="float-right" variant="primary" v-on:click="login()">
+              Log in
+            </b-btn>
+          </div>
         </b-modal>
 
       </div>
@@ -72,7 +77,10 @@
         error: "",
         errorFlag: false,
         token: null,
-        userId: null
+        userId: null,
+        username: '',
+        email: '',
+        password: ''
       }
     },
     mounted: function () {
@@ -83,6 +91,30 @@
 
       goToUserPage: function () {
         this.$goToAnotherPage('/users/' + this.userId);
+      },
+
+      login: function () {
+        console.log(this.username + this.email);
+        if (this.username === '' && this.email === '') {
+          alert("Please enter a username or email address");
+        } else if (this.email === '') {
+          //login with username
+          this.$login(this.username, this.password).then(function () {
+            location.reload() //reload page
+          });
+        } else {
+          //login with email
+          this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
+            JSON.stringify({"email": this.email, "password": this.password}))
+            .then(function (response) {
+              localStorage.setItem("token", response.data["token"]); //store token
+              localStorage.setItem("id", response.data["id"]); //store id
+              location.reload(); //reload page
+            }, function (error) {
+              console.log(error);
+            });
+        }
+
       },
 
       logout: function () {

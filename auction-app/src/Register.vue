@@ -68,8 +68,10 @@
             "password": this.password
           }))
             .then(function (response) {
-              this.$login(this.username, this.password);
-              alert("Registration successful! You are now logged in, " + this.username);
+              this.$login(this.username, this.password).then(function () {
+                this.$router.push('/'); //go back home
+              });
+              alert("Registration successful! You are now logged in as " + this.username);
             }, function (error) {
               if (error.status === 400) {
                 alert("That username or email address is already taken.");
