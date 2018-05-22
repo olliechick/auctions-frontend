@@ -3,6 +3,7 @@ import App from './App.vue';
 import Home from './Home.vue';
 import Won from './Won.vue';
 import User from './User.vue';
+import EditUser from './EditUser.vue';
 import Register from './Register.vue';
 import Auction from './Auction.vue';
 import EditAuction from './EditAuction.vue';
@@ -42,6 +43,11 @@ const routes = [
     path:"/users/:userId",
     name: "user",
     component: User
+  },
+  {
+    path:"/users/:userId/edit",
+    name: "editUser",
+    component: EditUser
   },
   {
     path:"/auctions/create",

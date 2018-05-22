@@ -64,7 +64,7 @@
             <b-form-input :disabled="useCurrentTime" inline type="time" v-model="startTime" required></b-form-input>
             <b-form-checkbox v-model="useCurrentTime" :value="true" :unchecked-value="false"
                              class="m-2" @change="updateUseCurrentTime">
-              Now
+              In 60 seconds
             </b-form-checkbox>
           </b-form-group>
 
@@ -145,7 +145,7 @@
       this.initialiseDates();
       this.$getCategories();
       this.token = this.$getToken();
-      this.timer = setInterval(this.updateStartTime, 1000); //update start time (if "now" is checked) every second
+      this.timer = setInterval(this.updateStartTime, 1000); //update start time (if "In 60 seconds" is checked) every second
     },
     methods: {
 
@@ -260,7 +260,7 @@
         if (this.file != null) {
           let getImageTypePromise = this.getImageTypeFromFile(this.file);
           let self = this;
-          getImageTypePromise.then(function(imageType) {
+          getImageTypePromise.then(function (imageType) {
             selff.imageType = imageType;
             if (selff.imageType === "unknown") {
               alert("Sorry, that file type is unknown. You must provide a jpeg or png image.");
@@ -270,7 +270,7 @@
             /* All fields are now validated, generate the auction.*/
             selff.generateAuction();
 
-          }).catch(function(error) {
+          }).catch(function (error) {
             console.log(error);
             alert("Sorry, there was an error loading that image. Please try again, or use another image.");
             return;
@@ -356,10 +356,10 @@
       ,
 
       /**
-       * Sets the start time to the current time if the "Now" checkbox is checked.
+       * Sets the start time to the current time if the "In 60 seconds" checkbox is checked.
        */
       setStartTimeToCurrent() {
-        let d = new Date();
+        let d = new Date(new Date().getTime() + 60 * 1000); // make a date in 60 seconds
         let year = d.getFullYear();
         let month = ('0' + (d.getMonth() + 1)).slice(-2); // months start from 0; add 0 padding
         let date = ('0' + d.getDate()).slice(-2);       // add 0 padding

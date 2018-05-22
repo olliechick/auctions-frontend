@@ -6,16 +6,8 @@
       <h1 class="title"> User details </h1>
       <navbar></navbar>
 
-      <div v-if="errorCode === 401">
-        <b-alert variant="danger" show>Error: Unauthorised.</b-alert>
-      </div>
-
-      <div v-else-if="errorCode === 404">
-        <b-alert variant="danger" show>Error: User does not exist.</b-alert>
-      </div>
-
-      <div v-else>
-        <b-alert variant="danger" show>Error.</b-alert>
+      <div v-if="errorCode != null">
+        <b-alert variant="danger" show>{{ getErrorMessage() }}</b-alert>
       </div>
 
     </div>
@@ -39,7 +31,10 @@
         <b-card inline class="m-3">
 
           <div v-if="user.email || user.accountBalance">
-            <b-button style="float:right" variant="primary">Edit</b-button>
+            <b-button style="float:right" variant="primary"
+                      v-on:click="$goToAnotherPage('/users/' + userId + '/edit')">
+              Edit
+            </b-button>
           </div>
 
           <div v-if="user.givenName || user.familyName">
@@ -72,7 +67,9 @@
       return {
         token: '',
         user: {username: "", givenName: "", familyName: ""},
-        errorCode: 0
+        userId: null,
+        errorCode: null,
+        errorMessage: ''
       }
     },
     watch: {
@@ -87,8 +84,8 @@
     },
     methods: {
       getUser() {
-        let userId = this.$route.params.userId;
-        this.$http.get('http://127.0.0.1:4941/api/v1/users/' + userId, {headers: {'x-authorization': this.token}})
+        this.userId = this.$route.params.userId;
+        this.$http.get('http://127.0.0.1:4941/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.user = response.data;
           }, function (error) {
@@ -96,6 +93,17 @@
             this.errorCode = error.status;
             this.user = null;
           });
+      },
+
+      getErrorMessage() {
+        switch (this.errorCode) {
+          case 401:
+            return "Error: Unauthorised.";
+          case 404:
+            return "Error: User does not exist.";
+          default:
+            return "Error.";
+        }
       }
     }
   }

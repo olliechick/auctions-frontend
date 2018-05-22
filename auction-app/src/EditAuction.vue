@@ -5,9 +5,13 @@
 
     <navbar></navbar>
 
-    <b-alert v-if="errorMessage !== ''" variant="danger" show>{{ errorMessage }}</b-alert>
+    <b-alert v-if="errorMessage === 'Loading'" variant="info" show>Loading</b-alert>
 
-    <b-form @submit="saveAuction">
+    <b-alert v-else-if="errorMessage !== ''" variant="danger" show>{{ errorMessage }}</b-alert>
+
+    <!--todo add a warning that the auction will start soon -->
+
+    <b-form v-else @submit="saveAuction">
 
       <b-card bg-variant="light" class="m-4" title="Details">
 
@@ -66,7 +70,7 @@
             <b-form-input :disabled="useCurrentTime" inline type="time" v-model="startTime" required></b-form-input>
             <b-form-checkbox v-model="useCurrentTime" :value="true" :unchecked-value="false"
                              class="m-2" @change="updateUseCurrentTime">
-              Now
+              In 60 seconds
             </b-form-checkbox>
           </b-form-group>
 
@@ -145,7 +149,7 @@
         reservePriceCents: null,
 
         errors: [],
-        errorMessage: '',
+        errorMessage: 'Loading',
         submitAttempted: false,
         token: null
       }
@@ -154,7 +158,7 @@
       this.initialiseAuctionData();
       this.$getCategories();
       this.token = this.$getToken();
-      this.timer = setInterval(this.updateStartTime, 1000); //update start time (if "now" is checked) every second
+      this.timer = setInterval(this.updateStartTime, 1000); //update start time (if "In 60 seconds" is checked) every second
     },
     methods: {
 
@@ -163,7 +167,24 @@
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.errorMessage = '';
+
+            // Load in values necessary to check if they can edit this auction.
             let auction = response.data;
+
+            let d = new Date(auction.startDateTime);
+
+            // Check if they won't be able to edit this auction.
+            if (auction.seller.id !== this.$getUserId()) {
+              // They don't own this auction
+              this.errorMessage = 'Unauthorised';
+              return;
+            } else if (d < Date.now()) {
+              // The auction has started
+              this.errorMessage = "Forbidden. The auction has begun."
+
+            }
+
+            // They can edit this auction. Load in the rest of the values from the auction.
             auction.starts = new Date(auction.startDateTime).toLocaleString();
             auction.ends = new Date(auction.endDateTime).toLocaleString();
 
@@ -174,7 +195,6 @@
             this.useStartingPrice = auction.startingBid === auction.reservePrice;
             this.reservePrice = auction.reservePrice / 100;
 
-            let d = new Date(auction.startDateTime);
             let year = d.getFullYear();
             let month = ('0' + (d.getMonth() + 1)).slice(-2); // months start from 0; add 0 padding
             let date = ('0' + d.getDate()).slice(-2);       // add 0 padding
@@ -192,15 +212,13 @@
             this.endDate = year + "-" + month + "-" + date;
             this.endTime = hour + ":" + minute;
 
-            //todo have some way of deleting a photo
-
             this.description = auction.description;
 
           }, function (error) {
             console.log(error);
             if (error.status === 400) {
               this.errorMessage = "400: Bad request";
-            } else if (error.status === 404) {
+            } else if (error.status === 401) {
               this.errorMessage = "401: Unauthorised";
             } else if (error.status === 404) {
               this.errorMessage = "404: Auction not found.";
@@ -213,10 +231,10 @@
       },
 
       deletePhoto() {
-        this.$http.delete('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos',{headers: {'x-authorization': this.token}})
-          .then(function(response) {
+        this.$http.delete('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos', {headers: {'x-authorization': this.token}})
+          .then(function (response) {
             alert("Photo deleted!");
-          }, function(error) {
+          }, function (error) {
             if (error.status === 404) {
               alert("Eroror 404: Auction not found.");
             } else if (error.status === 401) {
