@@ -6,35 +6,33 @@
     <navbar></navbar>
 
     <!-- Register form -->
+    <b-form inline @submit.prevent="register">
 
-    <form @submit.prevent="register">
-      <label>
-        Name:
-        <input type="text" v-model="givenName" placeholder="Given name"/>
-        <input type="text" v-model="familyName" placeholder="Family name"/>
-      </label>
-      <br/>
-      <label>
-        Username:
-        <input type="text" required="required" v-model="username"/>
-      </label>
-      <br/>
-      <label>
-        Email:
-        <input type="email" v-model="email" placeholder="user@example.com"/>
-      </label>
-      <br/>
-      <label>
-        Password:
-        <input type="password" required="required" v-model="password"/>
-      </label>
-      <br/>
-      <button type="submit">Register</button>
-    </form>
+      <b-card bg-variant="light" class="m-4 p-2">
+
+        <b-form-group label="Name" class="mb-3">
+          <b-form-input type="text" v-model="givenName" placeholder="Given name" inline></b-form-input>
+          <b-form-input type="text" v-model="familyName" placeholder="Family name" inline></b-form-input>
+        </b-form-group>
+
+
+        <b-form-group horizontal label="Username" class="mb-3">
+          <b-form-input type="text" v-model="username" inline required></b-form-input>
+        </b-form-group>
+
+        <b-form-group horizontal label="Email address" class="mb-3">
+          <b-form-input v-model="email" type="email" inline required></b-form-input>
+        </b-form-group>
+
+        <b-form-group horizontal label="Password" class="mb-3">
+          <b-form-input v-model="password" type="password" inline required></b-form-input>
+        </b-form-group>
+
+        <b-btn variant="primary" type="submit">Register</b-btn>
+      </b-card>
+    </b-form>
 
   </div>
-
-
 </template>
 
 <script>

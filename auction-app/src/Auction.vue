@@ -27,21 +27,26 @@
 
           <!-- Auction information card -->
           <b-card title="Auction information" class="mb-2 mt-2">
-            <p class="card-text">
 
-              <b>Seller</b>:
-              <b-link v-on:click="$goToAnotherPage('/users/' + auction.seller.id)">
-                {{ auction.seller.username }}
-              </b-link>
-              <br/>
-              <!--todo replace Starts and Ends with context-dependant string: Starts/Started and Ends/Ended-->
+            <b>Seller</b>:
+            <b-link v-on:click="$goToAnotherPage('/users/' + auction.seller.id)">
+              {{ auction.seller.username }}
+            </b-link>
+
+            <div v-if="new Date(this.auction.startDateTime) > Date.now()">
               <b>Starts</b>: {{auction.starts}}
-              <br/>
+            </div>
+            <div v-else>
+              <b>Started</b>: {{auction.starts}}
+            </div>
 
+            <div v-if="new Date(this.auction.endDateTime) > Date.now()">
               <b>Ends</b>: {{auction.ends}}
-              <br/>
+            </div>
+            <div v-else>
+              <b>Ended</b>: {{auction.ends}}
+            </div>
 
-            </p>
           </b-card>
 
           <!-- Place a bid form (if user is eligible to bid) -->
@@ -126,8 +131,9 @@
 
     mounted: function () {
       this.token = this.$getToken();
-      this.$getAuction().then(function() {
-        this.bidAmount = this.getSuggestedBid();});
+      this.$getAuction().then(function () {
+        this.bidAmount = this.getSuggestedBid();
+      });
       this.getBidHistory();
     },
 
@@ -169,13 +175,12 @@
        * @returns {boolean} true if the logged-in user can bid on the auction
        */
       userIsEligibleToBid() {
-        //todo revert!!
         let userId = this.$getUserId();
         /*return true;*/
         return (userId !== null && !isNaN(userId)
-                  && this.auction.seller.id !== this.$getUserId()
-                  && this.auction.startDateTime <= Date.now()
-                  && this.auction.endDateTime > Date.now());
+          && this.auction.seller.id !== this.$getUserId()
+          && this.auction.startDateTime <= Date.now()
+          && this.auction.endDateTime > Date.now());
       },
 
       /**
@@ -196,13 +201,21 @@
       },
 
       placeBid() {
-        let bidAmountCents = parseInt(this.bidAmount*100);
+        let bidAmountCents = parseInt(this.bidAmount * 100);
         this.$http.post('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/bids', {}, {
           params: {"amount": bidAmountCents}, headers: {'x-authorization': this.token}
         }).then(function (response) {
           location.reload();
         }).catch(function (error) {
-          alert("Error placing bid"); // todo better error messages, based on error code
+          if (error.status === 400) {
+            alert("Error 400: You can't place a bid on this auction.");
+          } else if (error.status === 404) {
+            alert("Error 400: Auction not found.");
+          } else if (error.status === 500) {
+            alert("Error 500: Internal server error.");
+          } else {
+            alert("Error " + error.status + " occurred while attempting to place bid.");
+          }
           console.log(this.error);
         })
 

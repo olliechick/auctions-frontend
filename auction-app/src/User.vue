@@ -45,7 +45,7 @@
 
           <div v-if="user.email || user.accountBalance">
             <b>Email:</b> {{ user.email }} <br/>
-            <b>Account balance:</b> {{ user.accountBalance }} <br/>
+            <b>Account balance:</b> {{ user.accountBalanceDollars }} <br/>
           </div>
 
         </b-card>
@@ -88,6 +88,11 @@
         this.$http.get('http://127.0.0.1:4941/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.user = response.data;
+            this.user.accountBalanceDollars = (this.user.accountBalance/100).toLocaleString("en-NZ", {
+              style: "currency",
+              currency: "NZD",
+              minimumFractionDigits: 2
+            });
           }, function (error) {
             console.log(error);
             this.errorCode = error.status;

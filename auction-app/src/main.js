@@ -101,10 +101,18 @@ Vue.mixin({
       return this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
         .then(function(response) {
+          console.log("GOOD");
+          console.log(response);
           localStorage.setItem("token", response.data["token"]); //store token
           localStorage.setItem("id", response.data["id"]); //store id
-        }, function (error) {
+          location.reload();
+        }).catch(function (error) {
           console.log(error);
+          if (error.status == 400) {
+            alert("Incorrect username or password.");
+          } else {
+            alert("Error: " + error.status);
+          }
         });
     },
 
