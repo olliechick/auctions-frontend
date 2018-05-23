@@ -86,6 +86,7 @@
         <!-- Photo -->
         <b-form-file accept="image/jpeg, image/png" class="mb-2" v-model="file"
                      placeholder="Upload a photo..." id="imageForm"></b-form-file>
+        <!--<b-button class="mb-2" variant="danger" v-on:click="clearFiles">Delete photo</b-button>-->
 
         <b-form-group label="Description:" label-for="auctionTitle" class="mb-2">
           <b-form-textarea id="textarea1" v-model="description" :rows="3"></b-form-textarea>
@@ -189,6 +190,10 @@
 
       },
 
+      clearFiles () {
+        this.$refs.fileinput.reset();
+      },
+
       /**
        * Validates all the fields and creates the auction.
        * If any are invalid, it will alert the user.
@@ -202,22 +207,24 @@
         /* (Auction title is validated by having the "required" attribute enabled) */
 
         /* Start price */
-        if (this.isValidDollarAmount(this.startingPrice)) {
-          this.startingPriceCents = parseInt(this.startingPrice * 100)
+        let startingPriceInt = parseFloat(this.startingPrice);
+        if (this.isValidDollarAmount(startingPriceInt)) {
+          this.startingPriceCents = startingPriceInt * 100
         } else {
-          alert("Starting price must be a valid dollar amount (a positive number with no more than three decimal places).");
+          alert("Starting price must be a valid dollar amount (a positive number with no more than two decimal places).");
           return;
         }
 
         /* Reserve price */
-        if (!this.isValidDollarAmount(this.reservePrice)) {
-          alert("Reserve price must be a valid dollar amount (a positive number with no more than three decimal places).");
+        let reservePriceInt = parseFloat(this.reservePrice);
+        if (!this.isValidDollarAmount(reservePriceInt)) {
+          alert("Reserve price must be a valid dollar amount (a positive number with no more than two decimal places).");
           return;
-        } else if (this.reservePrice < this.startingPrice) {
+        } else if (reservePriceInt < startingPriceInt) {
           alert("Reserve price must be at least as high as the starting price");
           return;
         } else {
-          this.reservePriceCents = parseInt(this.reservePrice * 100);
+          this.reservePriceCents = reservePriceInt * 100;
         }
 
         /* Start time */
@@ -261,14 +268,14 @@
           let getImageTypePromise = this.getImageTypeFromFile(this.file);
           let self = this;
           getImageTypePromise.then(function (imageType) {
-            selff.imageType = imageType;
-            if (selff.imageType === "unknown") {
+            self.imageType = imageType;
+            if (self.imageType === "unknown") {
               alert("Sorry, that file type is unknown. You must provide a jpeg or png image.");
               return;
             }
 
             /* All fields are now validated, generate the auction.*/
-            selff.generateAuction();
+            self.generateAuction();
 
           }).catch(function (error) {
             console.log(error);
@@ -416,8 +423,10 @@
       ,
 
       reservePriceIsValid() {
+        let startingPriceInt = parseFloat(this.startingPrice);
+        let reservePriceInt = parseFloat(this.reservePrice);
         if (this.submitAttempted && !this.useStartingPrice) {
-          if (this.isValidDollarAmount(this.reservePrice) && this.reservePrice >= this.startingPrice) {
+          if (this.isValidDollarAmount(reservePriceInt) && reservePriceInt >= startingPriceInt) {
             return null;
           } else {
             return false;
@@ -436,12 +445,13 @@
        */
       isValidDollarAmount(dollarAmount) {
         let pieces;
+        dollarAmount = parseFloat(dollarAmount); // make sure it is a float (e.g. not a string)
 
         // Check it is a positive number
         if ((dollarAmount == "") || (dollarAmount < 0) || (isNaN(dollarAmount)) || dollarAmount == null) {
           return false;
         } else {
-          pieces = dollarAmount.split(".");
+          pieces = dollarAmount.toString().split(".");
         }
 
         // Check it has no more than 2 decimals (excluding trailing 0s)

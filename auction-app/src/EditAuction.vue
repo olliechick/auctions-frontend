@@ -302,13 +302,13 @@
         if (this.isValidDollarAmount(this.startingPrice)) {
           this.startingPriceCents = parseInt(this.startingPrice * 100)
         } else {
-          alert("Starting price must be a valid dollar amount (a positive number with no more than three decimal places).");
+          alert("Starting price must be a valid dollar amount (a positive number with no more than two decimal places).");
           return;
         }
 
         /* Reserve price */
         if (!this.isValidDollarAmount(this.reservePrice)) {
-          alert("Reserve price must be a valid dollar amount (a positive number with no more than three decimal places).");
+          alert("Reserve price must be a valid dollar amount (a positive number with no more than two decimal places).");
           return;
         } else if (this.reservePrice < this.startingPrice) {
           alert("Reserve price must be at least as high as the starting price");

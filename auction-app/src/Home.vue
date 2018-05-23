@@ -70,7 +70,7 @@
         selectedStatus: "",
         categories: [],
         statuses: ["all", "active", "expired", "won", "upcoming"],
-        itemsPerPage: 2,
+        itemsPerPage: 10,
         currentPage: 1,
         numberOfAuctions: 0
       }
@@ -86,8 +86,6 @@
         this.$http.get('http://127.0.0.1:4941/api/v1/auctions')
           .then(function (response) {
             this.auctions = response.data;
-            this.auctions.forEach(function (part, index, theArray) {
-            });
             this.numberOfAuctions = this.auctions.length;
             this.updateSearch();
           }, function (error) {
@@ -100,13 +98,17 @@
             params: {
               "q": this.searchTerm,
               "category-id": this.selectedCategory,
-              "status": this.selectedStatus,
+              "status": this.selectedStatus/*,
               "startIndex": (this.itemsPerPage * this.currentPage-1) - 1,
-              "count": this.itemsPerPage
+              "count": this.itemsPerPage*/
             }
           }
         ).then(function (response) {
           this.auctions = response.data;
+          // if using startIndex and count, remove the below two lines
+          this.numberOfAuctions = this.auctions.length;
+          //this.auctions = this.auctions.slice(0, 4);
+          this.auctions = this.auctions.slice(this.itemsPerPage * (this.currentPage-1), (this.itemsPerPage * this.currentPage-1));
         }, function (error) {
           console.log(error);
         });

@@ -2,6 +2,10 @@ import Vue from 'vue'
 import App from './App.vue';
 import Home from './Home.vue';
 import Won from './Won.vue';
+import BiddingOn from './BiddingOn.vue';
+import Current from './Current.vue';
+import Sold from './Sold.vue';
+import Unsold from './Unsold.vue';
 import User from './User.vue';
 import EditUser from './EditUser.vue';
 import Register from './Register.vue';
@@ -33,6 +37,26 @@ const routes = [
     path: "/won",
     name: "won",
     component: Won
+  },
+  {
+    path: "/bidding_on",
+    name: "biddingOn",
+    component: BiddingOn
+  },
+  {
+    path: "/current",
+    name: "current",
+    component: Current
+  },
+  {
+    path: "/sold",
+    name: "sold",
+    component: Sold
+  },
+  {
+    path: "/unsold",
+    name: "unsold",
+    component: Unsold
   },
   {
     path: "/register",
@@ -100,7 +124,7 @@ Vue.mixin({
 
     $getAuction() {
       this.auctionId = this.$route.params.auctionId;
-      this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
+      return this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
         .then(function (response) {
           this.errorMessage = '';
           this.auction = response.data;

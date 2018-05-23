@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <h1 class="title"> Won </h1>
+    <h1 class="title"> Items I'm selling </h1>
 
     <navbar></navbar>
 
@@ -27,25 +27,27 @@
       return {
         error: "",
         errorFlag: false,
-        user: null,
-        auctions: null,
-        token: null
+        userId: null,
+        auctions: null
       }
     },
 
     mounted: function () {
-      this.token = this.$getToken();
+      this.userId = this.$getUserId();
       this.getAuctions();
     },
 
     methods: {
       getAuctions: function () {
         console.log(this.token);
-        this.$http.get('http://127.0.0.1:4941/api/v1/my_won_auctions', {
-          headers: {'x-authorization': this.token}
-        }).then(function (response) {
+        this.$http.get('http://127.0.0.1:4941/api/v1/auctions', {
+            params: {
+              "seller": this.userId,
+              "status": "active"
+            }
+          }
+        ).then(function (response) {
           this.auctions = response.data;
-          this.numberOfAuctions = this.auctions.length;
         }, function (error) {
           console.log(error);
         });

@@ -33,7 +33,7 @@
                 {{ auction.seller.username }}
               </b-link>
               <br/>
-<!--todo replace Starts and Ends with context-dependant string: Starts/Started and Ends/Ended-->
+              <!--todo replace Starts and Ends with context-dependant string: Starts/Started and Ends/Ended-->
               <b>Starts</b>: {{auction.starts}}
               <br/>
 
@@ -46,9 +46,9 @@
           <!-- Place a bid form (if user is eligible to bid) -->
           <b-form v-if="userIsEligibleToBid()" class="mb-2 mt-2">
             <b-input-group prepend="$">
-              <b-form-input :value="getSuggestedBid()"></b-form-input>
+              <b-form-input v-model="bidAmount"></b-form-input>
               <b-input-group-append>
-                <b-button variant="primary">Bid</b-button>
+                <b-button v-on:click="placeBid" variant="primary">Bid</b-button>
               </b-input-group-append>
             </b-input-group>
           </b-form>
@@ -87,6 +87,9 @@
                 <div v-if="bidHistory.length === 0">
                   No bids!
                 </div>
+                <div v-else-if="bidHistory.length === 1">
+                  No more bids!
+                </div>
               </b-card-body>
             </b-collapse>
 
@@ -115,13 +118,15 @@
         auction: {title: "Auction details"},
         auctionId: null,
         errorMessage: 'Loading',
+        bidAmount: null,
         bidHistory: []
       }
     },
 
     mounted: function () {
       this.token = this.$getToken();
-      this.$getAuction();
+      this.$getAuction().then(function() {
+        this.bidAmount = this.getSuggestedBid();});
       this.getBidHistory();
     },
 
@@ -165,30 +170,41 @@
       userIsEligibleToBid() {
         //todo revert!!
         let userId = this.$getUserId();
-        return true;/*(userId !== null && !isNaN(userId)
-          && this.auction.seller.id !== this.$getUserId()
-          && this.auction.startDateTime <= Date.now()
-          && this.auction.endDateTime > Date.now());
-          // hack to force end of block comment */
+        /*return true;*/
+        return (userId !== null && !isNaN(userId)
+                  && this.auction.seller.id !== this.$getUserId()
+                  && this.auction.startDateTime <= Date.now()
+                  && this.auction.endDateTime > Date.now());
       },
 
       /**
        * Returns the suggested bid for the user to make. It is either:
-       * - the reserve price, if no bids have been placed, or
+       * - the starting bid, if no bids have been placed, or
        * - the current bid + 1 cent
        * @returns {string}
        */
       getSuggestedBid() {
         let dollars;
         if (this.bidHistory.length === 0) {
-          // no bids yet
-          dollars = this.auction.startingBid / 100;
+          // no bids yet TODO the +1 on this line is because bids must be strictly greater than the starting price
+          dollars = (this.auction.startingBid + 1) / 100;
         } else {
           dollars = (this.auction.currentBid + 1) / 100;
         }
-        return dollars.toLocaleString("en-NZ", {
-          minimumFractionDigits: 2
-        });
+        return dollars;
+      },
+
+      placeBid() {
+        let bidAmountCents = parseInt(this.bidAmount*100);
+        this.$http.post('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/bids', {}, {
+          params: {"amount": bidAmountCents}, headers: {'x-authorization': this.token}
+        }).then(function (response) {
+          location.reload();
+        }).catch(function (error) {
+          alert("Error placing bid"); // todo better error messages, based on error code
+          console.log(this.error);
+        })
+
       }
     }
   }
