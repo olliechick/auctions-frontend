@@ -100,10 +100,10 @@
 
       </b-card>
 
-      <!-- "Save auction" submit button todo move this (maybe to middle?)-->
-      <b-card bg-variant="light" class="m-4">
-        <b-btn variant="primary" type="submit">Save auction</b-btn>
-      </b-card>
+      <!-- "Save auction" submit button -->
+      <div class="m-4">
+        <b-btn block variant="primary" type="submit">Save auction</b-btn>
+      </div>
 
     </b-form>
 

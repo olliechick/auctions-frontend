@@ -94,8 +94,11 @@
 
       </b-card>
 
-      <!-- "Create auction" submit button todo move this (maybe to middle?)-->
-      <b-btn variant="primary" type="submit">Create auction</b-btn>
+      <!-- "Create auction" submit button -->
+      <div class="m-4">
+        <b-btn block variant="primary" type="submit">Create auction</b-btn>
+      </div>
+
 
     </b-form>
 
@@ -189,11 +192,11 @@
         });
 
       },
-
-      clearFiles () {
-        this.$refs.fileinput.reset();
-      },
-
+      /*
+            clearFiles () {
+              this.$refs.fileinput.reset();
+            },
+      */
       /**
        * Validates all the fields and creates the auction.
        * If any are invalid, it will alert the user.

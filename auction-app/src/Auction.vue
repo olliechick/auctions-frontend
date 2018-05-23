@@ -17,8 +17,9 @@
         </b-col>
         <b-col>
 
-          <!-- Edit button, for the owner of the auction todo check it is before starting time-->
-          <b-button v-if="this.auction.seller.id === this.$getUserId()" block variant="primary"
+          <!-- Edit button, for the owner of the auction if it hasn't started yet -->
+          <b-button v-if="this.auction.seller.id === this.$getUserId() && new Date(auction.startDateTime) > Date.now()"
+                    block variant="primary"
                     v-on:click="$goToAnotherPage('/auctions/' + auctionId + '/edit')">
             Edit
           </b-button>
@@ -186,7 +187,7 @@
       getSuggestedBid() {
         let dollars;
         if (this.bidHistory.length === 0) {
-          // no bids yet TODO the +1 on this line is because bids must be strictly greater than the starting price
+          // no bids yet TODO the +1 on this line is because bids must be strictly greater than the starting price, rm if server changes
           dollars = (this.auction.startingBid + 1) / 100;
         } else {
           dollars = (this.auction.currentBid + 1) / 100;
