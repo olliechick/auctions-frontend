@@ -2,7 +2,7 @@
   "name": "auction-app",
   "description": "An app for buying and selling, using uactions",
   "version": "1.0.0",
-  "author": "ANON SENG365 STUDENT",
+  "author": "Ollie Chick <olliechick@gmail.com>",
   "license": "MIT",
   "private": true,
   "scripts": {
