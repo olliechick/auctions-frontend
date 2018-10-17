@@ -30,6 +30,7 @@ const basepath = process.env.BASE_PATH || '/auctions';
 const routes = [
   {
     path: basepath + "/",
+    name: "home",
     component: Home
   },
   {
