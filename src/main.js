@@ -119,7 +119,7 @@ Vue.mixin({
     $goToAnotherPage: function (page) {
       console.log("going");
       console.log(page);
-      this.$router.push(page);
+      this.$router.push(basepath + page);
     },
 
     $getToken: function () {
