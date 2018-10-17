@@ -14,12 +14,15 @@ import EditAuction from './EditAuction.vue';
 import CreateAuction from './CreateAuction.vue';
 
 import VueRouter from 'vue-router';
+
 Vue.use(VueRouter);
 
 import VueResource from 'vue-resource';
+
 Vue.use(VueResource);
 
 import BootstrapVue from 'bootstrap-vue'
+
 Vue.use(BootstrapVue);
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -28,63 +31,64 @@ import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css
 
 Vue.http.options.emulateJSON = true;
 
+const basepath = process.env.BASE_PATH || '/auctions';
 const routes = [
   {
-    path: "/",
+    path: basepath + "/",
     component: Home
   },
   {
-    path: "/won",
+    path: basepath + "/won",
     name: "won",
     component: Won
   },
   {
-    path: "/bidding_on",
+    path: basepath + "/bidding_on",
     name: "biddingOn",
     component: BiddingOn
   },
   {
-    path: "/current",
+    path: basepath + "/current",
     name: "current",
     component: Current
   },
   {
-    path: "/sold",
+    path: basepath + "/sold",
     name: "sold",
     component: Sold
   },
   {
-    path: "/unsold",
+    path: basepath + "/unsold",
     name: "unsold",
     component: Unsold
   },
   {
-    path: "/register",
+    path: basepath + "/register",
     name: "register",
     component: Register
   },
   {
-    path:"/users/:userId",
+    path: basepath + "/users/:userId",
     name: "user",
     component: User
   },
   {
-    path:"/users/:userId/edit",
+    path: basepath + "/users/:userId/edit",
     name: "editUser",
     component: EditUser
   },
   {
-    path:"/auctions/create",
+    path: basepath + "/auctions/create",
     name: "saveAuction",
     component: CreateAuction
   },
   {
-    path:"/auctions/:auctionId",
+    path: basepath + "/auctions/:auctionId",
     name: "auction",
     component: Auction
   },
   {
-    path:"/auctions/:auctionId/edit",
+    path: basepath + "/auctions/:auctionId/edit",
     name: "editAuction",
     component: EditAuction
   }
@@ -97,10 +101,10 @@ const router = new VueRouter({
 
 Vue.mixin({
   methods: {
-    $login: function(username, password) {
+    $login: function (username, password) {
       return this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
-        .then(function(response) {
+        .then(function (response) {
           console.log("GOOD");
           console.log(response);
           localStorage.setItem("token", response.data["token"]); //store token
