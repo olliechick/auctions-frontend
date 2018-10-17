@@ -98,7 +98,7 @@ const router = new VueRouter({
 Vue.mixin({
   methods: {
     $login: function (username, password) {
-      return this.$http.post('http://127.0.0.1:4941/api/v1/users/login',
+      return this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
         .then(function (response) {
           console.log("GOOD");
@@ -132,7 +132,7 @@ Vue.mixin({
 
     $getAuction() {
       this.auctionId = this.$route.params.auctionId;
-      return this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
+      return this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
         .then(function (response) {
           this.errorMessage = '';
           this.auction = response.data;
@@ -154,7 +154,7 @@ Vue.mixin({
     },
 
     $getCategories: function () {
-      this.$http.get('http://127.0.0.1:4941/api/v1/categories')
+      this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/categories')
         .then(function (response) {
           this.categories = response.data;
         }, function (error) {

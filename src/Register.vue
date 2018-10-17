@@ -58,7 +58,7 @@
         if (!validator.validate(this.email)) {
           alert("That email is invalid.");
         } else {
-          this.$http.post('http://127.0.0.1:4941/api/v1/users', JSON.stringify({
+          this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/users', JSON.stringify({
             "username": this.username,
             "givenName": this.givenName,
             "familyName": this.familyName,

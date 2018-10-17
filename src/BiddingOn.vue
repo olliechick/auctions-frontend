@@ -9,7 +9,7 @@
 
     <b-list-group v-for="auction in auctions" :key="auction.id">
       <b-list-group-item :to="'/auctions/' + auction.id" class="auctionListItem">
-        <b-img class="auctionListPhoto" :src="'http://127.0.0.1:4941/api/v1/auctions/' + auction.id + '/photos'"/>
+        <b-img class="auctionListPhoto" :src="'http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + auction.id + '/photos'"/>
         {{ auction.title }}
       </b-list-group-item>
     </b-list-group>
@@ -40,7 +40,7 @@
     methods: {
       getAuctions: function () {
         console.log(this.token);
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions', {
+        this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/auctions', {
             params: {
               "bidder": this.userId,
               "status": "active"

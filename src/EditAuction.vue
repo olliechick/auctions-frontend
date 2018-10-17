@@ -164,7 +164,7 @@
 
       initialiseAuctionData: function () {
         this.auctionId = this.$route.params.auctionId;
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
+        this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.errorMessage = '';
 
@@ -231,7 +231,7 @@
       },
 
       deletePhoto() {
-        this.$http.delete('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos', {headers: {'x-authorization': this.token}})
+        this.$http.delete('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/photos', {headers: {'x-authorization': this.token}})
           .then(function (response) {
             alert("Photo deleted!");
           }, function (error) {
@@ -392,7 +392,7 @@
         }
 
         // POST auction to server
-        this.$http.patch('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId, JSON.stringify({
+        this.$http.patch('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId, JSON.stringify({
           "categoryId": this.selectedCategory,
           "title": this.title,
           "description": this.description,
@@ -410,7 +410,7 @@
             } else {
               //POST auction image to server
 
-              this.$http.post('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos',
+              this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/photos',
                 this.file,   // request body
                 {            // request options
                   emulateJSON: false,

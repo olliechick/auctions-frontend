@@ -51,7 +51,7 @@
 
       getUser() {
         this.userId = this.$route.params.userId;
-        return this.$http.get('http://127.0.0.1:4941/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
+        return this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.user = response.data;
           }, function (error) {
@@ -63,7 +63,7 @@
 
       saveUser: function (e) {
         e.preventDefault();
-        this.$http.patch('http://127.0.0.1:4941/api/v1/users/' + this.userId, {
+        this.$http.patch('http://ollie-auction-backend.herokuapp.com/api/v1/users/' + this.userId, {
           "givenName": this.givenName,
           "familyName": this.familyName
         }, {headers: {'x-authorization': this.token}}

@@ -7,7 +7,7 @@
     <b-container v-if="errorMessage === ''">
       <b-row>
         <b-col cols="8">
-          <b-img fluid thumbnail :src="'http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/photos'"/>
+          <b-img fluid thumbnail :src="'http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/photos'"/>
           <b-card title="Description" class="mb-2 mt-2">
             <p class="card-text">
               {{ auction.description }}
@@ -140,7 +140,7 @@
     methods: {
       getBidHistory() {
         this.auctionId = this.$route.params.auctionId;
-        this.$http.get('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/bids',
+        this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/bids',
           {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.bidHistory = response.data;
@@ -202,7 +202,7 @@
 
       placeBid() {
         let bidAmountCents = parseInt(this.bidAmount * 100);
-        this.$http.post('http://127.0.0.1:4941/api/v1/auctions/' + this.auctionId + '/bids', {}, {
+        this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/bids', {}, {
           params: {"amount": bidAmountCents}, headers: {'x-authorization': this.token}
         }).then(function (response) {
           location.reload();

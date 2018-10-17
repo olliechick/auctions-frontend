@@ -85,7 +85,7 @@
     methods: {
       getUser() {
         this.userId = this.$route.params.userId;
-        this.$http.get('http://127.0.0.1:4941/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
+        this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/users/' + this.userId, {headers: {'x-authorization': this.token}})
           .then(function (response) {
             this.user = response.data;
             this.user.accountBalanceDollars = (this.user.accountBalance/100).toLocaleString("en-NZ", {
