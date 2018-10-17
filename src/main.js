@@ -26,65 +26,65 @@ Vue.use(VueResource);
 Vue.use(BootstrapVue);
 Vue.http.options.emulateJSON = true;
 
-const basepath = process.env.BASE_PATH || '/auctions';
+const basePath = process.env.BASE_PATH || '/auctions';
 const routes = [
   {
-    path: basepath + "/",
+    path: basePath + "/",
     name: "home",
     component: Home
   },
   {
-    path: basepath + "/won",
+    path: basePath + "/won",
     name: "won",
     component: Won
   },
   {
-    path: basepath + "/bidding_on",
+    path: basePath + "/bidding_on",
     name: "biddingOn",
     component: BiddingOn
   },
   {
-    path: basepath + "/current",
+    path: basePath + "/current",
     name: "current",
     component: Current
   },
   {
-    path: basepath + "/sold",
+    path: basePath + "/sold",
     name: "sold",
     component: Sold
   },
   {
-    path: basepath + "/unsold",
+    path: basePath + "/unsold",
     name: "unsold",
     component: Unsold
   },
   {
-    path: basepath + "/register",
+    path: basePath + "/register",
     name: "register",
     component: Register
   },
   {
-    path: basepath + "/users/:userId",
+    path: basePath + "/users/:userId",
     name: "user",
     component: User
   },
   {
-    path: basepath + "/users/:userId/edit",
+    path: basePath + "/users/:userId/edit",
     name: "editUser",
     component: EditUser
   },
   {
-    path: basepath + "/auctions/create",
+    path: basePath + "/auctions/create",
     name: "saveAuction",
     component: CreateAuction
   },
   {
-    path: basepath + "/auctions/:auctionId",
+    path: basePath + "/auctions/:auctionId",
     name: "auction",
     component: Auction
   },
   {
-    path: basepath + "/auctions/:auctionId/edit",
+    path: basePath + "/auctions/:auctionId/edit",
     name: "editAuction",
     component: EditAuction
   }
@@ -98,7 +98,7 @@ const router = new VueRouter({
 Vue.mixin({
   methods: {
     $login: function (username, password) {
-      return this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/users/login',
+      return this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
         .then(function (response) {
           console.log("GOOD");
@@ -119,7 +119,7 @@ Vue.mixin({
     $goToAnotherPage: function (page) {
       console.log("going");
       console.log(page);
-      this.$router.push(basepath + page);
+      this.$router.push(basePath + page);
     },
 
     $getToken: function () {
@@ -132,7 +132,7 @@ Vue.mixin({
 
     $getAuction() {
       this.auctionId = this.$route.params.auctionId;
-      return this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
+      return this.$http.get('https://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId, {headers: {'x-authorization': this.token}})
         .then(function (response) {
           this.errorMessage = '';
           this.auction = response.data;
@@ -154,7 +154,7 @@ Vue.mixin({
     },
 
     $getCategories: function () {
-      this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/categories')
+      this.$http.get('https://ollie-auction-backend.herokuapp.com/api/v1/categories')
         .then(function (response) {
           this.categories = response.data;
         }, function (error) {
@@ -163,6 +163,8 @@ Vue.mixin({
     }
   }
 });
+
+Vue.prototype.$basePath = basePath;
 
 new Vue({
   el: '#app',

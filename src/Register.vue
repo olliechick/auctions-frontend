@@ -58,7 +58,7 @@
         if (!validator.validate(this.email)) {
           alert("That email is invalid.");
         } else {
-          this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/users', JSON.stringify({
+          this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/users', JSON.stringify({
             "username": this.username,
             "givenName": this.givenName,
             "familyName": this.familyName,
@@ -67,7 +67,7 @@
           }))
             .then(function (response) {
               this.$login(this.username, this.password).then(function () {
-                this.$router.push('/'); //go back home
+                $goToAnotherPage('/'); //go back home
               });
               alert("Registration successful! You are now logged in as " + this.username);
             }, function (error) {

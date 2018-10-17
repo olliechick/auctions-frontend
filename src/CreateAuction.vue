@@ -305,7 +305,7 @@
         }
 
         // POST auction to server
-        this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/auctions', JSON.stringify({
+        this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/auctions', JSON.stringify({
           "categoryId": this.selectedCategory,
           "title": this.title,
           "description": this.description,
@@ -323,7 +323,7 @@
             } else {
               //POST auction image to server
 
-              this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + auctionId + '/photos',
+              this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + auctionId + '/photos',
                 this.file,   // request body
                 {            // request options
                   emulateJSON: false,

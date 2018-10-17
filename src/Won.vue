@@ -8,8 +8,8 @@
     <!-- Auction list -->
 
     <b-list-group v-for="auction in auctions" :key="auction.id">
-      <b-list-group-item :to="'/auctions/' + auction.id" class="auctionListItem">
-        <b-img class="auctionListPhoto" :src="'http://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + auction.id + '/photos'"/>
+      <b-list-group-item :to="$basePath + '/auctions/' + auction.id" class="auctionListItem">
+        <b-img class="auctionListPhoto" :src="'https://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + auction.id + '/photos'"/>
         {{ auction.title }}
       </b-list-group-item>
     </b-list-group>
@@ -41,7 +41,7 @@
     methods: {
       getAuctions: function () {
         console.log(this.token);
-        this.$http.get('http://ollie-auction-backend.herokuapp.com/api/v1/my_won_auctions', {
+        this.$http.get('https://ollie-auction-backend.herokuapp.com/api/v1/my_won_auctions', {
           headers: {'x-authorization': this.token}
         }).then(function (response) {
           this.auctions = response.data;

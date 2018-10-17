@@ -105,7 +105,7 @@
           this.$login(this.username, this.password);
         } else {
           //login with email
-          this.$http.post('http://ollie-auction-backend.herokuapp.com/api/v1/users/login',
+          this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/users/login',
             JSON.stringify({"email": this.email, "password": this.password}))
             .then(function (response) {
               console.log("Good email");
