@@ -1,4 +1,8 @@
 import Vue from 'vue'
+import VueRouter from 'vue-router';
+import VueResource from 'vue-resource';
+import BootstrapVue from 'bootstrap-vue';
+
 import App from './App.vue';
 import Home from './Home.vue';
 import Won from './Won.vue';
@@ -13,22 +17,13 @@ import Auction from './Auction.vue';
 import EditAuction from './EditAuction.vue';
 import CreateAuction from './CreateAuction.vue';
 
-import VueRouter from 'vue-router';
-
-Vue.use(VueRouter);
-
-import VueResource from 'vue-resource';
-
-Vue.use(VueResource);
-
-import BootstrapVue from 'bootstrap-vue'
-
-Vue.use(BootstrapVue);
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css';
 
+Vue.use(VueRouter);
+Vue.use(VueResource);
+Vue.use(BootstrapVue);
 Vue.http.options.emulateJSON = true;
 
 const basepath = process.env.BASE_PATH || '/auctions';
