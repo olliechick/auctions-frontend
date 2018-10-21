@@ -101,11 +101,7 @@ Vue.mixin({
       return this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/users/login',
         JSON.stringify({"username": username, "password": password}))
         .then(function (response) {
-          console.log("GOOD");
-          console.log(response);
-          localStorage.setItem("token", response.data["token"]); //store token
-          localStorage.setItem("id", response.data["id"]); //store id
-          location.reload();
+          this.$postLogin(response);
         }).catch(function (error) {
           console.log(error);
           if (error.status == 400) {
@@ -114,6 +110,12 @@ Vue.mixin({
             alert("Error: " + error.status);
           }
         });
+    },
+
+    $postLogin: function(response) {
+      console.log("Logged in successfully");
+      localStorage.setItem("token", response.data["token"]); //store token
+      localStorage.setItem("id", response.data["id"]); //store id
     },
 
     $goToAnotherPage: function (page) {

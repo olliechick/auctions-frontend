@@ -22,19 +22,12 @@
         </b-button>
 
         <!-- Login form in a modal -->
-        <b-form @submit="login">
-          <b-modal id="loginModal" title="Log in">
+          <b-modal id="loginModal" title="Log in" @ok="login" ok-title="Log in">
             <label class="mb-2">Please enter either your username or email address, then your password, and press Log in.</label>
             <b-form-input class="mb-2" placeholder="Username" v-model="username"></b-form-input>
             <b-form-input class="mb-2" placeholder="Email" v-model="email" autocomplete="email"></b-form-input>
             <b-form-input class="mb-2" placeholder="Password" v-model="password" type="password"></b-form-input>
-            <div slot="modal-footer" class="w-100">
-              <b-btn size="m-2" class="float-right" variant="primary" type="submit">
-                Log in
-              </b-btn>
-            </div>
           </b-modal>
-        </b-form>
 
       </div>
 
@@ -102,16 +95,19 @@
           alert("Please enter a username or email address");
         } else if (this.email === '') {
           //login with username
-          this.$login(this.username, this.password);
+          this.$login(this.username, this.password).then(function() {
+            this.token = this.$getToken();
+            this.userId = this.$getUserId();
+          });
         } else {
           //login with email
           this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/users/login',
             JSON.stringify({"email": this.email, "password": this.password}))
             .then(function (response) {
               console.log("Good email");
-              localStorage.setItem("token", response.data["token"]); //store token
-              localStorage.setItem("id", response.data["id"]); //store id
-              location.reload(); //reload page
+              this.$postLogin(response);
+              this.token = this.$getToken();
+              this.userId = this.$getUserId();
             }).catch(function (error) {
             console.log(error);
             if (error.status === 400) {
@@ -127,6 +123,8 @@
       logout: function () {
         localStorage.removeItem("token"); //delete token
         this.token = null;
+        localStorage.removeItem("id");
+        this.userId = null;
         this.$goToAnotherPage('/'); //go back home
       },
     }

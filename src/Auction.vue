@@ -130,14 +130,18 @@
     },
 
     mounted: function () {
-      this.token = this.$getToken();
-      this.$getAuction().then(function () {
-        this.bidAmount = this.getSuggestedBid();
-      });
-      this.getBidHistory();
+      this.getInitialData();
     },
 
     methods: {
+      getInitialData() {
+        this.token = this.$getToken();
+        this.$getAuction().then(function () {
+          this.bidAmount = this.getSuggestedBid();
+        });
+        this.getBidHistory();
+      },
+
       getBidHistory() {
         this.auctionId = this.$route.params.auctionId;
         this.$http.get('https://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/bids',
@@ -192,8 +196,8 @@
       getSuggestedBid() {
         let dollars;
         if (this.bidHistory.length === 0) {
-          // no bids yet TODO the +1 on this line is because bids must be strictly greater than the starting price, rm if server changes
-          dollars = (this.auction.startingBid + 1) / 100;
+          // no bids yet
+          dollars = (this.auction.startingBid) / 100;
         } else {
           dollars = (this.auction.currentBid + 1) / 100;
         }
@@ -205,12 +209,12 @@
         this.$http.post('https://ollie-auction-backend.herokuapp.com/api/v1/auctions/' + this.auctionId + '/bids', {}, {
           params: {"amount": bidAmountCents}, headers: {'x-authorization': this.token}
         }).then(function (response) {
-          location.reload();
+          this.getInitialData(); // reload the page's data
         }).catch(function (error) {
           if (error.status === 400) {
             alert("Error 400: You can't place a bid on this auction.");
           } else if (error.status === 404) {
-            alert("Error 400: Auction not found.");
+            alert("Error 404: Auction not found.");
           } else if (error.status === 500) {
             alert("Error 500: Internal server error.");
           } else {
