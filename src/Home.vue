@@ -7,6 +7,7 @@
 
     <!-- Modal that explains stuff, which pops up when users first go to site -->
     <b-modal ref="explanationModal" title="Hi!" ok-only >
+      <b>TLDR</b>: You can't upload images.<br /><br />
       This is an auction website I created for an assignment at the University of Canterbury in May 2018.<br />
       Since then, I've made some minor tweaks so that it runs in a production environment, uploaded the tutor's backend
       to a private repo on GitHub, set up a free Heroku server that it deploys from, and uploaded this frontend to my website.<br />
