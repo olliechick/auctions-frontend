@@ -12,7 +12,7 @@
       Since then, I've made some minor tweaks so that it runs in a production environment, uploaded the tutor's backend
       to a private repo on GitHub, set up a free Heroku server that it deploys from, and uploaded this frontend to my website.<br />
       There are therefore some limitations - uploading photos to auctions doesn't work, and the server will sometimes be a bit slow.<br />
-      But other than that, feel free to have a play (and if you want, check out <a href="http://olliechick.me">my website</a>).<br /><br />
+      But other than that, feel free to have a play (and if you want, check out <a href="http://olliechick.co.nz">my website</a>).<br /><br />
       &mdash; Ollie Chick, October 2018
     </b-modal>
 

@@ -2,7 +2,7 @@
 
 An app for buying and selling, using auctions.
 
-There is a live version at [olliechick.me/auctions](http://olliechick.me/auctions). Alternatively, you can run it yourself:
+There is a live version at [olliechick.co.nz/auctions](http://olliechick.co.nz/auctions). Alternatively, you can run it yourself:
 
 ## Build setup
 
